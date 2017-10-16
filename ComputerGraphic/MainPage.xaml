@@ -57,6 +57,8 @@
 
         <Canvas Name="MyCanvas" Grid.Row="1" Background="GreenYellow"
             AllowDrop="True" DragOver="Shape_DragOver" Drop="Shape_Drop">
+
+            <!--<Line Name="qwe" X1="0" Y1="0" X2="200" Y2="-200" Stroke="AntiqueWhite"/>-->
         </Canvas>
     </Grid>
 </Page>

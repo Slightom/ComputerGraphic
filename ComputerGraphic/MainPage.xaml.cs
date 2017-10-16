@@ -27,7 +27,7 @@ namespace ComputerGraphic
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private Point pointStartDragging;
+        private Point startPointOfDragging;
         private bool pointerMovedHandlerIsAdded;
         private bool pointerPressedHandlerIsAdded;
         private bool pointerReleasedHandlerIsAdded;
@@ -48,12 +48,11 @@ namespace ComputerGraphic
         #region dragging
         private void Shape_DragOver(object sender, DragEventArgs e)
         {
-
             e.AcceptedOperation = DataPackageOperation.Move;
             e.DragUIOverride.Caption = "drag and drop"; // Sets custom UI text
-            e.DragUIOverride.IsCaptionVisible = true; // Sets if the caption is visible
+            e.DragUIOverride.IsCaptionVisible = false; // Sets if the caption is visible
             e.DragUIOverride.IsContentVisible = true; // Sets if the dragged content is visible
-            e.DragUIOverride.IsGlyphVisible = true; // Sets if the glyph is visibile
+            e.DragUIOverride.IsGlyphVisible = false; // Sets if the glyph is visibile
         }
 
         private async void Shape_Drop(object sender, DragEventArgs e)
@@ -62,24 +61,59 @@ namespace ComputerGraphic
             point.X = Math.Round(point.X, 0);
             point.Y = Math.Round(point.Y, 0);
 
-            Canvas.SetLeft(MyCanvas.Children.OfType<Shape>().Where(x => x.Name == draggingElement.Name).FirstOrDefault(), point.X - pointStartDragging.X);
-            Canvas.SetTop(MyCanvas.Children.OfType<Shape>().Where(x => x.Name == draggingElement.Name).FirstOrDefault(), point.Y - pointStartDragging.Y);
-            MyCanvas.Children.OfType<Shape>().Where(x => x.Name == draggingElement.Name).FirstOrDefault().Opacity = 1.0;
+            var droppingShape = MyCanvas.Children.OfType<Shape>().Where(x => x.Name == draggingElement.Name).FirstOrDefault();
+            var leftPoistionOnCanvas = point.X - startPointOfDragging.X;
+            var topPoistionOnCanvas = point.Y - startPointOfDragging.Y;
 
-            selectedElement = MyCanvas.Children.OfType<Shape>().Where(x => x.Name == draggingElement.Name).FirstOrDefault();
+            if (droppingShape is Line)
+            {
+                var line = droppingShape as Line;
+                topPoistionOnCanvas = (line.Y1 < line.Y2) ? topPoistionOnCanvas : topPoistionOnCanvas + 2 * startPointOfDragging.Y;
+                var oldLeftOnCanvas = line.X1;
+                var oldTopOnCanvas = line.Y1;
+                if (leftPoistionOnCanvas > oldLeftOnCanvas)
+                {
+                    line.X1 += Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
+                    line.X2 += Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
+                }
+                else
+                {
+                    line.X1 -= Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
+                    line.X2 -= Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
+                }
+                if (topPoistionOnCanvas > oldTopOnCanvas)
+                {
+                    line.Y1 += Modul(oldTopOnCanvas - topPoistionOnCanvas);
+                    line.Y2 += Modul(oldTopOnCanvas - topPoistionOnCanvas);
+                }
+                else
+                {
+                    line.Y1 -= Modul(oldTopOnCanvas - topPoistionOnCanvas);
+                    line.Y2 -= Modul(oldTopOnCanvas - topPoistionOnCanvas);
+                }
+            }
+            else
+            {
+                Canvas.SetLeft(MyCanvas.Children.OfType<Shape>().Where(x => x.Name == draggingElement.Name).FirstOrDefault(), leftPoistionOnCanvas);
+                Canvas.SetTop(MyCanvas.Children.OfType<Shape>().Where(x => x.Name == draggingElement.Name).FirstOrDefault(), topPoistionOnCanvas);
+            }
+
+            droppingShape.Opacity = 1.0;
+
             Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
         }
 
         private void Shape_DragStarting(UIElement sender, DragStartingEventArgs e)
         {
             draggingElement = sender as Shape;
-            pointStartDragging = e.GetPosition(MyCanvas);
-            pointStartDragging.X = Math.Round(pointStartDragging.X - Canvas.GetLeft(sender), 0);
-            pointStartDragging.Y = Math.Round(pointStartDragging.Y - Canvas.GetTop(sender), 0);
+            startPointOfDragging = e.GetPosition(MyCanvas);
+            var difX = (sender is Line) ? Modul(startPointOfDragging.X - (sender as Line).X1) : Modul(startPointOfDragging.X - Canvas.GetLeft(sender));
+            var difY = (sender is Line) ? Modul(startPointOfDragging.Y - (sender as Line).Y1) : Modul(startPointOfDragging.Y - Canvas.GetTop(sender));
+            startPointOfDragging.X = Math.Round(difX, 0);
+            startPointOfDragging.Y = Math.Round(difY, 0);
 
             e.Data.RequestedOperation = DataPackageOperation.Move;
             sender.Opacity = 0.2;
-
 
             Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Hand, 0);
         }
@@ -88,21 +122,23 @@ namespace ComputerGraphic
 
         private void ConfirmDimensions_Click(object sender, RoutedEventArgs e)
         {
-            if(selectedOption != "CursorListBoxItem")
+            if (selectedOption != "CursorListBoxItem")
             {
-                switch(selectedOption)
+                switch (selectedOption)
                 {
                     case "LineListBoxItem":
                         Line l2 = new Line();
                         l2.Name = "l" + MyCanvas.Children.Count();
                         l2.Stroke = new SolidColorBrush(Windows.UI.Colors.Blue);
                         l2.X1 = SmallerFrom(double.Parse(X1TextBox.Text), double.Parse(X2TextBox.Text));
-                        l2.Y1 = double.Parse(Y1TextBox.Text);
-                        l2.X2 = double.Parse(X2TextBox.Text);
-                        l2.Y2 = double.Parse(Y2TextBox.Text);
+                        l2.X2 = BiggerFrom(double.Parse(X1TextBox.Text), double.Parse(X2TextBox.Text));
+                        l2.Y1 = (double.Parse(X1TextBox.Text) < double.Parse(X2TextBox.Text)) ? double.Parse(Y1TextBox.Text) : double.Parse(Y2TextBox.Text);
+                        l2.Y2 = (double.Parse(X1TextBox.Text) > double.Parse(X2TextBox.Text)) ? double.Parse(Y1TextBox.Text) : double.Parse(Y2TextBox.Text);
                         l2.StrokeThickness = 2;
                         l2.DragStarting += Shape_DragStarting;
                         MyCanvas.Children.Add(l2);
+                        Canvas.SetLeft(l2, 0);
+                        Canvas.SetTop(l2, 0);
                         break;
                     case "RectangleListBoxItem":
                         Rectangle r = new Rectangle();
@@ -119,7 +155,7 @@ namespace ComputerGraphic
                     case "CircleListBoxItem":
                         Ellipse el = new Ellipse();
                         el.Name = "e" + MyCanvas.Children.Count();
-                        el.Width = obtainC62(Modul(double.Parse(X1TextBox.Text) - double.Parse(X2TextBox.Text)), Modul(double.Parse(Y1TextBox.Text) - double.Parse(Y2TextBox.Text)));
+                        el.Width = Modul(double.Parse(X1TextBox.Text) - double.Parse(X2TextBox.Text));
                         el.Height = el.Width;
                         el.StrokeThickness = 3;
                         el.Stroke = new SolidColorBrush(Windows.UI.Colors.Red);
@@ -132,7 +168,7 @@ namespace ComputerGraphic
             }
             else
             {
-                if(MyCanvas.Children.OfType<Line>().Where(x => x.Name == selectedElement.Name).Count() > 0)
+                if (MyCanvas.Children.OfType<Line>().Where(x => x.Name == selectedElement.Name).Count() > 0)
                 {
                     var qw = MyCanvas.Children.OfType<Line>().Where(x => x.Name == selectedElement.Name).FirstOrDefault();
                     qw.X1 = Math.Round(double.Parse(X1TextBox.Text), 0);
@@ -140,7 +176,7 @@ namespace ComputerGraphic
                     qw.X2 = Math.Round(double.Parse(X2TextBox.Text), 0);
                     qw.Y2 = Math.Round(double.Parse(Y2TextBox.Text), 0);
                 }
-                else if(MyCanvas.Children.OfType<Rectangle>().Where(x => x.Name == selectedElement.Name).Count() > 0)
+                else if (MyCanvas.Children.OfType<Rectangle>().Where(x => x.Name == selectedElement.Name).Count() > 0)
                 {
                     var qw = MyCanvas.Children.OfType<Rectangle>().Where(x => x.Name == selectedElement.Name).FirstOrDefault();
                     qw.Width = Modul(double.Parse(X1TextBox.Text) - double.Parse(X2TextBox.Text));
@@ -152,9 +188,9 @@ namespace ComputerGraphic
                 else
                 {
                     var qw = MyCanvas.Children.OfType<Ellipse>().Where(x => x.Name == selectedElement.Name).FirstOrDefault();
-                    qw.Width = obtainC62(Modul(double.Parse(X1TextBox.Text) - double.Parse(X2TextBox.Text)), Modul(double.Parse(Y1TextBox.Text) - double.Parse(Y2TextBox.Text)));
+                    qw.Width = Modul(double.Parse(X1TextBox.Text) - double.Parse(X2TextBox.Text));
                     qw.Height = qw.Width;
- 
+
                     Canvas.SetLeft(qw, SmallerFrom(double.Parse(X1TextBox.Text), double.Parse(X2TextBox.Text)));
                     Canvas.SetTop(qw, HigherFrom(double.Parse(Y1TextBox.Text), double.Parse(Y2TextBox.Text)));
                 }
@@ -210,7 +246,7 @@ namespace ComputerGraphic
             }
         }
 
-       
+
 
         #region setting pointer handlers
         private void SetPointerReleased(bool add)
@@ -374,10 +410,13 @@ namespace ComputerGraphic
                     l2.X1 = Math.Round(SmallerFrom(double.Parse(X1TextBox.Text), double.Parse(X2TextBox.Text)), 0);
                     l2.Y1 = Math.Round((double.Parse(X1TextBox.Text) < double.Parse(X2TextBox.Text)) ? double.Parse(Y1TextBox.Text) : double.Parse(Y2TextBox.Text), 0);
                     l2.X2 = Math.Round(BiggerFrom(double.Parse(X1TextBox.Text), double.Parse(X2TextBox.Text)), 0);
-                    l2.Y2 = Math.Round((double.Parse(X1TextBox.Text) < double.Parse(X2TextBox.Text)) ? double.Parse(Y2TextBox.Text) : double.Parse(Y1TextBox.Text), 0);
+                    l2.Y2 = Math.Round((double.Parse(X1TextBox.Text) > double.Parse(X2TextBox.Text)) ? double.Parse(Y1TextBox.Text) : double.Parse(Y2TextBox.Text), 0);
                     l2.StrokeThickness = 2;
                     l2.DragStarting += Shape_DragStarting;
                     MyCanvas.Children.Add(l2);
+
+                    Canvas.SetLeft(l2, 0);
+                    Canvas.SetTop(l2, 0);
                     break;
 
                 case "RectangleListBoxItem":
@@ -396,7 +435,7 @@ namespace ComputerGraphic
                 case "CircleListBoxItem":
                     Ellipse el = new Ellipse();
                     el.Name = "e" + MyCanvas.Children.Count();
-                    el.Width = Math.Round(obtainC62(Modul(double.Parse(X1TextBox.Text) - double.Parse(X2TextBox.Text)), Modul(double.Parse(Y1TextBox.Text) - double.Parse(Y2TextBox.Text))), 0);
+                    el.Width = Math.Round(Modul(double.Parse(X1TextBox.Text) - double.Parse(X2TextBox.Text)), 0);
                     el.Height = el.Width;
                     el.StrokeThickness = 3;
                     el.Stroke = new SolidColorBrush(Windows.UI.Colors.Red);
@@ -416,7 +455,7 @@ namespace ComputerGraphic
             if (sender is Line) { selectedElement = MyCanvas.Children.OfType<Line>().Where(x => x.Name == (sender as Line).Name).FirstOrDefault(); }
             else if (sender is Rectangle) { selectedElement = MyCanvas.Children.OfType<Rectangle>().Where(x => x.Name == (sender as Rectangle).Name).FirstOrDefault(); }
             else { selectedElement = MyCanvas.Children.OfType<Ellipse>().Where(x => x.Name == (sender as Ellipse).Name).FirstOrDefault(); }
-            
+
         }
 
         private void Shape_PointerExited(object sender, PointerRoutedEventArgs e)
@@ -428,10 +467,13 @@ namespace ComputerGraphic
         {
             if (selectedElement is Line)
             {
-                X1TextBox.Text = (selectedElement as Line).X1.ToString();
-                X2TextBox.Text = (selectedElement as Line).X2.ToString();
-                Y1TextBox.Text = (selectedElement as Line).Y1.ToString();
-                Y2TextBox.Text = (selectedElement as Line).Y2.ToString();
+                selectedElement = MyCanvas.Children.OfType<Line>().Where(x => x.Name == (selectedElement as Line).Name).FirstOrDefault();
+                var line = (selectedElement as Line);
+                X1TextBox.Text = line.X1.ToString();
+                X2TextBox.Text = line.X2.ToString();
+                Y1TextBox.Text = line.Y1.ToString();
+                Y2TextBox.Text = line.Y2.ToString();
+
             }
             else if (selectedElement is Rectangle)
             {
@@ -453,10 +495,6 @@ namespace ComputerGraphic
         #endregion
 
         #region helpful functions 
-        private double obtainC62(double v1, double v2)
-        {
-            return Math.Sqrt(Math.Pow(v1, 2) + Math.Pow(v2, 2));
-        }
 
         private double HigherFrom(double v1, double v2)
         {
@@ -494,6 +532,6 @@ namespace ComputerGraphic
         }
 
         #endregion
-      
+
     }
 }
