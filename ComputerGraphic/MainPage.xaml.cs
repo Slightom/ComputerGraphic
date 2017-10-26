@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -36,6 +41,8 @@ namespace ComputerGraphic
         private bool pointerIsPressed;
         private Shape draggingElement;
         private Shape selectedElement;
+        private Image draggingImage;
+        private Image selectedImage;
 
         public MainPage()
         {
@@ -43,7 +50,30 @@ namespace ComputerGraphic
             Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
             pointerMovedHandlerIsAdded = false;
             pointerIsPressed = false;
+
+            //BitmapImage b = new BitmapImage(new Uri("C:\\Users\\Slightom\\Downloads\\ppm-obrazy-testowe\\ppm-test-01-p3.ppm"));
+            //myBitMap.Source = b;
         }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            PersonalizeTitleBar();
+        }
+
+        private void PersonalizeTitleBar()
+        {
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+
+            titleBar.BackgroundColor = Colors.Black;
+            titleBar.ForegroundColor = Colors.White;
+
+            titleBar.ButtonBackgroundColor = Colors.Black;
+            titleBar.ButtonForegroundColor = Colors.White;
+        }
+
+        #region PAINT
 
         #region dragging
         private void Shape_DragOver(object sender, DragEventArgs e)
@@ -65,40 +95,55 @@ namespace ComputerGraphic
             var leftPoistionOnCanvas = point.X - startPointOfDragging.X;
             var topPoistionOnCanvas = point.Y - startPointOfDragging.Y;
 
-            if (droppingShape is Line)
+            if (droppingShape != null)
             {
-                var line = droppingShape as Line;
-                topPoistionOnCanvas = (line.Y1 < line.Y2) ? topPoistionOnCanvas : topPoistionOnCanvas + 2 * startPointOfDragging.Y;
-                var oldLeftOnCanvas = line.X1;
-                var oldTopOnCanvas = line.Y1;
-                if (leftPoistionOnCanvas > oldLeftOnCanvas)
+                if (droppingShape is Line)
                 {
-                    line.X1 += Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
-                    line.X2 += Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
+                    var line = droppingShape as Line;
+                    topPoistionOnCanvas = (line.Y1 < line.Y2) ? topPoistionOnCanvas : topPoistionOnCanvas + 2 * startPointOfDragging.Y;
+                    var oldLeftOnCanvas = line.X1;
+                    var oldTopOnCanvas = line.Y1;
+                    if (leftPoistionOnCanvas > oldLeftOnCanvas)
+                    {
+                        line.X1 += Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
+                        line.X2 += Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
+                    }
+                    else
+                    {
+                        line.X1 -= Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
+                        line.X2 -= Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
+                    }
+                    if (topPoistionOnCanvas > oldTopOnCanvas)
+                    {
+                        line.Y1 += Modul(oldTopOnCanvas - topPoistionOnCanvas);
+                        line.Y2 += Modul(oldTopOnCanvas - topPoistionOnCanvas);
+                    }
+                    else
+                    {
+                        line.Y1 -= Modul(oldTopOnCanvas - topPoistionOnCanvas);
+                        line.Y2 -= Modul(oldTopOnCanvas - topPoistionOnCanvas);
+                    }
                 }
                 else
                 {
-                    line.X1 -= Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
-                    line.X2 -= Modul(oldLeftOnCanvas - leftPoistionOnCanvas);
+                    Canvas.SetLeft(MyCanvas.Children.OfType<Shape>().Where(x => x.Name == draggingElement.Name).FirstOrDefault(), leftPoistionOnCanvas);
+                    Canvas.SetTop(MyCanvas.Children.OfType<Shape>().Where(x => x.Name == draggingElement.Name).FirstOrDefault(), topPoistionOnCanvas);
                 }
-                if (topPoistionOnCanvas > oldTopOnCanvas)
-                {
-                    line.Y1 += Modul(oldTopOnCanvas - topPoistionOnCanvas);
-                    line.Y2 += Modul(oldTopOnCanvas - topPoistionOnCanvas);
-                }
-                else
-                {
-                    line.Y1 -= Modul(oldTopOnCanvas - topPoistionOnCanvas);
-                    line.Y2 -= Modul(oldTopOnCanvas - topPoistionOnCanvas);
-                }
+
+                droppingShape.Opacity = 1.0;
             }
             else
             {
-                Canvas.SetLeft(MyCanvas.Children.OfType<Shape>().Where(x => x.Name == draggingElement.Name).FirstOrDefault(), leftPoistionOnCanvas);
-                Canvas.SetTop(MyCanvas.Children.OfType<Shape>().Where(x => x.Name == draggingElement.Name).FirstOrDefault(), topPoistionOnCanvas);
+                var droppingImage = MyCanvas.Children.OfType<Image>().Where(x => x.Name == draggingImage.Name).FirstOrDefault();
+
+                Canvas.SetLeft(MyCanvas.Children.OfType<Image>().Where(x => x.Name == draggingImage.Name).FirstOrDefault(), leftPoistionOnCanvas);
+                Canvas.SetTop(MyCanvas.Children.OfType<Image>().Where(x => x.Name == draggingImage.Name).FirstOrDefault(), topPoistionOnCanvas);
+
+                droppingImage.Opacity = 1.0;
             }
 
-            droppingShape.Opacity = 1.0;
+            draggingElement = null;
+            draggingImage = null;
 
             Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
         }
@@ -106,6 +151,7 @@ namespace ComputerGraphic
         private void Shape_DragStarting(UIElement sender, DragStartingEventArgs e)
         {
             draggingElement = sender as Shape;
+            draggingImage = sender as Image;
             startPointOfDragging = e.GetPosition(MyCanvas);
             var difX = (sender is Line) ? Modul(startPointOfDragging.X - (sender as Line).X1) : Modul(startPointOfDragging.X - Canvas.GetLeft(sender));
             var difY = (sender is Line) ? Modul(startPointOfDragging.Y - (sender as Line).Y1) : Modul(startPointOfDragging.Y - Canvas.GetTop(sender));
@@ -532,6 +578,299 @@ namespace ComputerGraphic
         }
 
         #endregion
+
+        #endregion
+
+        #region PPM Files
+
+        private async void LoadFileClickAsync(object sender, RoutedEventArgs e)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+            picker.FileTypeFilter.Add(".ppm");
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".jpeg");
+
+            StorageFile file = await picker.PickSingleFileAsync();
+            if (file != null)
+            {
+                if (file.FileType == ".jpg" || file.FileType == ".jpeg")
+                {
+                    await ReadJPG(file);
+                }
+                else if (file.FileType == ".ppm")
+                {
+                    //Read ppm
+                    await ReadPPM(file);
+                }
+                else
+                {
+                    throw new Exception("Invalid tye of file");
+                }
+            }
+        }
+
+        private async Task ReadJPG(StorageFile file)
+        {
+            var bitmap = new BitmapImage();
+            FileRandomAccessStream stream = (FileRandomAccessStream)await file.OpenAsync(FileAccessMode.Read);
+            bitmap.SetSource(stream);
+            Image Image = new Image();
+            Image.Source = bitmap;
+            Image.DragStarting += Shape_DragStarting;
+            Image.CanDrag = true;
+            Image.Name = "i" + MyCanvas.Children.Count().ToString();
+            MyCanvas.Children.Add(Image);
+        }
+
+        private async Task ReadPPM(StorageFile file)
+        {
+            FileRandomAccessStream stream = (FileRandomAccessStream)await file.OpenAsync(FileAccessMode.Read);
+            BinaryReader reader = new BinaryReader(stream.AsStream());
+
+            var header = reader.ReadBytes(2);
+            if (header[0] == 'P' && header[1] == '3')
+            {
+                await ReadP3(stream);
+            }
+            else if (header[0] == 'P' && header[1] == '6')
+            {
+                await ReadP6(reader);
+            }
+            else
+            {
+                //invalid format
+            }
+        }
+
+
+        private async Task ReadP3(FileRandomAccessStream stream)
+        {
+            var reader = new StreamReader(stream.AsStream());
+            int width = -1, height = -1, max = -1;
+
+            ReadParameters(reader, ref width, ref height, ref max);
+
+            var numbers = ReadAllNumbers(reader, width, height);
+
+            WriteableBitmap bitmap = new WriteableBitmap(width, height);
+            var array = ReadP3(width, height, max, numbers);
+            using (Stream bitmapStream = bitmap.PixelBuffer.AsStream())
+            {
+                await bitmapStream.WriteAsync(array, 0, array.Length);
+            }
+
+            Image Image = new Image();
+            //Image.Width = width;
+            //Image.Height = height;
+            Image.Source = bitmap;
+            Image.DragStarting += Shape_DragStarting;
+            Image.CanDrag = true;
+            Image.Name = "i" + MyCanvas.Children.Count().ToString();
+            MyCanvas.Children.Add(Image);
+        }
+
+        private byte[] ReadP3(int width, int height, int max, int[] numbers)
+        {
+            byte[] array = new byte[height * width * 4];
+            try
+            {
+                for (int i = 0, j = 0; i < array.Length; i += 4, j += 3)
+                {
+                    array[i] = (byte)(numbers[j] * 255 / max);
+                    array[i + 1] = (byte)((numbers[j + 2]) * 255 / max);
+                    array[i + 2] = (byte)((numbers[j + 1]) * 255 / max);
+                    array[i + 3] = (byte)255;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
+            return array;
+        }
+
+        private int[] ReadAllNumbers(StreamReader reader, int width, int height)
+        {
+            string line;
+            string[] words;
+            int number;
+            int counter = 0;
+            int[] numbers = new int[width * height * 3];
+            while (!reader.EndOfStream)
+            {
+                line = reader.ReadLine();
+                line = line.Replace("\t", "");
+                words = line.Split(' ');
+                foreach (var word in words)
+                {
+                    if (word.Contains("#"))
+                    {
+                        break;
+                    }
+                    if (word == " " || word == "" || word == "\0" || word == "\n")
+                    {
+                        continue;
+                    }
+                    try
+                    {
+                        number = Int32.Parse(word);
+                        numbers[counter] = number;
+                        counter++;
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.Message);
+                    }
+                }
+            }
+
+            return numbers;
+        }
+
+        private void ReadParameters(StreamReader reader, ref int width, ref int height, ref int max)
+        {
+            reader.ReadLine();
+            string line;
+            int number;
+
+            while (max == -1)
+            {
+                line = reader.ReadLine();
+                line = line.Replace("\t", " ");
+                var words = line.Split(' ');
+                foreach (var word in words)
+                {
+                    if (word.Contains("#")) { break; }
+                    if (word.Contains(" ") || word == "" || word.Contains("\t") || word.Contains("\0") || word.Contains("\n")) { continue; }
+
+                    try
+                    {
+                        number = Int32.Parse(word);
+                        if (width == -1)
+                        {
+                            width = number;
+                        }
+                        else if (height == -1)
+                        {
+                            height = number;
+                        }
+                        else if (max == -1)
+                        {
+                            max = number;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.Message);
+                    }
+                }
+            }
+        }
+
+
+
+        private async Task ReadP6(BinaryReader reader)
+        {
+            ReadWhitespace(reader);
+            int width = ReadValue(reader);
+            ReadWhitespace(reader);
+            int height = ReadValue(reader);
+            ReadWhitespace(reader);
+            int max = ReadValue(reader);
+
+            WriteableBitmap bitmap = new WriteableBitmap(width, height);
+            byte[] array = new byte[5];
+            if (max > 255)
+            {
+                // array = Read16bit(reader, width, height, max);
+            }
+            else
+            {
+                array = Read8bit(reader, width, height, max);
+            }
+            using (Stream stream = bitmap.PixelBuffer.AsStream())
+            {
+                await stream.WriteAsync(array, 0, array.Length);
+            }
+            Image Image = new Image();
+            Image.Source = bitmap;
+            Image.DragStarting += Shape_DragStarting;
+            Image.CanDrag = true;
+            Image.Name = "i" + MyCanvas.Children.Count().ToString();
+            MyCanvas.Children.Add(Image);
+        }
+
+        private byte[] Read8bit(BinaryReader reader, int width, int height, int max)
+        {
+            byte[] array = new byte[height * width * 4];
+            try
+            {
+                for (int i = 0; i < array.Length; i += 4)
+                {
+                    byte[] rgb = reader.ReadBytes(3);
+                    array[i] = (byte) ((int)rgb[2] * 255 / max);
+                    array[i + 1] = (byte)((int)rgb[1] * 255 / max);
+                    array[i + 2] = (byte)((int)rgb[0] * 255 / max);
+                    array[i + 3] = (byte)255;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception();
+            }
+
+            return array;
+        }
+
+        private int ReadValue(BinaryReader reader)
+        {
+            StringBuilder builder = new StringBuilder();
+            char c = reader.ReadChar();
+
+            while (c != ' ' && c != '\t' && c != '\n' && c != '\0')
+            {
+                builder.Append(c);
+                c = reader.ReadChar();
+            }
+
+            return int.Parse(builder.ToString());
+        }
+
+        private void ReadWhitespace(BinaryReader reader)
+        {
+            char c = reader.ReadChar();
+
+            while (c == ' ' || c == '\t' || c == '\n' || c == '\0' || c == '#')
+            {
+
+                // When we encounter a comment, read until the end of it (has to be a newline)
+                if (c == '#')
+                {
+                    reader.ReadChar();
+                    while (c != '\n')
+                    {
+                        try
+                        {
+                            c = reader.ReadChar();
+                        }
+                        catch (Exception e)
+                        {
+                            reader.BaseStream.Seek(1, SeekOrigin.Current);
+                        }
+                    }
+                }
+                c = reader.ReadChar();
+            }
+
+            // When we encounter a non-whitespace character again we have to go back one byte, so it can be read by other functions
+            reader.BaseStream.Seek(-1, SeekOrigin.Current);
+        }
+
+        #endregion
+
+
 
     }
 }

@@ -5,60 +5,276 @@
     xmlns:local="using:ComputerGraphic"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Windows.UI.Xaml.Controls"
+    xmlns:ui="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
     mc:Ignorable="d"
-    Width="1330"
-    Height="680">
+    Width="1366"
+    Height="696"
+    Background="Black"
+    Foreground="White">
+    <ui:Page.Resources>
+        <ui:Style x:Key="MyStyleOfListBox" TargetType="ui:ListBoxItem">
+            <ui:Setter Property="Background" Value="Transparent"/>
+            <ui:Setter Property="TabNavigation" Value="Local"/>
+            <ui:Setter Property="Padding" Value="12,11,12,13"/>
+            <ui:Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <ui:Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <ui:Setter Property="Template">
+                <ui:Setter.Value>
+                    <ui:ControlTemplate TargetType="ui:ListBoxItem">
+                        <ui:Grid x:Name="LayoutRoot" BorderThickness="{ui:TemplateBinding BorderThickness}" Background="{ui:TemplateBinding Background}">
+                            <ui:Grid.Resources>
+                                <ui:Style x:Key="BaseContentPresenterStyle" TargetType="ui:ContentPresenter">
+                                    <ui:Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+                                    <ui:Setter Property="FontWeight" Value="SemiBold"/>
+                                    <ui:Setter Property="FontSize" Value="15"/>
+                                    <ui:Setter Property="TextWrapping" Value="Wrap"/>
+                                    <ui:Setter Property="LineStackingStrategy" Value="MaxHeight"/>
+                                    <ui:Setter Property="TextLineBounds" Value="Full"/>
+                                    <ui:Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
+                                </ui:Style>
+                                <ui:Style x:Key="BodyContentPresenterStyle" BasedOn="{ui:StaticResource BaseContentPresenterStyle}" TargetType="ui:ContentPresenter">
+                                    <ui:Setter Property="FontWeight" Value="Normal"/>
+                                    <ui:Setter Property="FontSize" Value="15"/>
+                                </ui:Style>
+                            </ui:Grid.Resources>
+                            <ui:VisualStateManager.VisualStateGroups>
+                                <ui:VisualStateGroup x:Name="CommonStates">
+                                    <ui:VisualState x:Name="Normal"/>
+                                    <ui:VisualState x:Name="Disabled">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="PointerOver">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="PressedBackground">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="#585858"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Pressed">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="PressedBackground">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="#ddd50a"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Selected">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="PressedBackground">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="#fff72b"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="SelectedUnfocused">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="PressedBackground">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="#eee61a"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="SelectedPointerOver">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="PressedBackground">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="#fff72b"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="SelectedPressed">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="PressedBackground">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="#fff72b"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                            </ui:VisualStateManager.VisualStateGroups>
+                            <ui:Rectangle x:Name="PressedBackground" Fill="Transparent" ui:Control.IsTemplateFocusTarget="True"/>
+                            <ui:ContentPresenter x:Name="ContentPresenter" ContentTemplate="{ui:TemplateBinding ContentTemplate}" ContentTransitions="{ui:TemplateBinding ContentTransitions}" Content="{ui:TemplateBinding Content}" HorizontalAlignment="{ui:TemplateBinding HorizontalContentAlignment}" Margin="{ui:TemplateBinding Padding}" Style="{ui:StaticResource BodyContentPresenterStyle}" TextWrapping="NoWrap" VerticalAlignment="{ui:TemplateBinding VerticalContentAlignment}"/>
+                        </ui:Grid>
+                    </ui:ControlTemplate>
+                </ui:Setter.Value>
+            </ui:Setter>
+        </ui:Style>
+        <ui:Style x:Key="MyButtonStyle" TargetType="ui:Button">
+            <ui:Setter Property="Background" Value="{ui:ThemeResource ButtonBackground}"/>
+            <ui:Setter Property="Foreground" Value="{ui:ThemeResource ButtonForeground}"/>
+            <ui:Setter Property="BorderBrush" Value="{ui:ThemeResource ButtonBorderBrush}"/>
+            <ui:Setter Property="BorderThickness" Value="{ui:ThemeResource ButtonBorderThemeThickness}"/>
+            <ui:Setter Property="Padding" Value="8,4,8,4"/>
+            <ui:Setter Property="HorizontalAlignment" Value="Left"/>
+            <ui:Setter Property="VerticalAlignment" Value="Center"/>
+            <ui:Setter Property="FontFamily" Value="{ui:ThemeResource ContentControlThemeFontFamily}"/>
+            <ui:Setter Property="FontWeight" Value="Normal"/>
+            <ui:Setter Property="FontSize" Value="{ui:ThemeResource ControlContentThemeFontSize}"/>
+            <ui:Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <ui:Setter Property="FocusVisualMargin" Value="-3"/>
+            <ui:Setter Property="Template">
+                <ui:Setter.Value>
+                    <ui:ControlTemplate TargetType="ui:Button">
+                        <ui:Grid x:Name="RootGrid" Background="#eee61a">
+                            <ui:VisualStateManager.VisualStateGroups>
+                                <ui:VisualStateGroup x:Name="CommonStates">
+                                    <ui:VisualState x:Name="Normal">
+                                        <ui:Storyboard>
+                                            <ui:PointerUpThemeAnimation ui:Storyboard.TargetName="RootGrid"/>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="PointerOver">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="RootGrid">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="#ddd50a"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="BorderBrush" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource ButtonBorderBrushPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource ButtonForegroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:PointerUpThemeAnimation ui:Storyboard.TargetName="RootGrid"/>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Pressed">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="RootGrid">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource ButtonBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="BorderBrush" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource ButtonBorderBrushPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource ButtonForegroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:PointerDownThemeAnimation ui:Storyboard.TargetName="RootGrid"/>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Disabled">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="RootGrid">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource ButtonBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="BorderBrush" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource ButtonBorderBrushDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource ButtonForegroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                            </ui:VisualStateManager.VisualStateGroups>
+                            <ui:ContentPresenter x:Name="ContentPresenter" ui:AutomationProperties.AccessibilityView="Raw" BorderBrush="{ui:TemplateBinding BorderBrush}" BorderThickness="{ui:TemplateBinding BorderThickness}" ContentTemplate="{ui:TemplateBinding ContentTemplate}" ContentTransitions="{ui:TemplateBinding ContentTransitions}" Content="{ui:TemplateBinding Content}" HorizontalContentAlignment="{ui:TemplateBinding HorizontalContentAlignment}" Padding="{ui:TemplateBinding Padding}" VerticalContentAlignment="{ui:TemplateBinding VerticalContentAlignment}"/>
+                        </ui:Grid>
+                    </ui:ControlTemplate>
+                </ui:Setter.Value>
+            </ui:Setter>
+        </ui:Style>
+    </ui:Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="Black">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Name="PaintMenu" Orientation="Horizontal" Background="LightBlue" VerticalAlignment="Center">
-            <TextBlock Name="Title" Text="MyPaint" FontSize="26" Margin="20,0,20,0" VerticalAlignment="Center"/>
-            <TextBlock Text="|" Margin="20,0,20,0" FontSize="30" FontWeight="ExtraLight" />
-            <ListBox Name="SelectShapeListBox" SelectionMode="Single" SelectionChanged="SelectMenuListBox_SelectionChanged" Width="200" Height="50" Background="LightBlue" Margin="20,0,20,0">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBoxItem Name="CursorListBoxItem" Width="50" ToolTipService.ToolTip="Cursor" ToolTipService.Placement="Bottom" IsSelected="True">
-                    <TextBlock FontFamily="Segoe MDL2 Assets" Text=" &#xE1E3;" FontSize="20" TextAlignment="Center"/>
-                </ListBoxItem>
-                <ListBoxItem Name="LineListBoxItem" Width="50" ToolTipService.ToolTip="Draw Line" ToolTipService.Placement="Bottom">
-                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8DB;" FontSize="20" TextAlignment="Center"/>
-                </ListBoxItem>
-                <ListBoxItem Name="RectangleListBoxItem" Width="50" ToolTipService.ToolTip="Draw Rectangle" ToolTipService.Placement="Bottom" >
-                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE003;" FontSize="20" HorizontalAlignment="Center"/>
-                </ListBoxItem>
-                <ListBoxItem Name="CircleListBoxItem" Width="50" ToolTipService.ToolTip="Draw Circle" ToolTipService.Placement="Bottom">
-                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEA3A;" FontSize="20" HorizontalAlignment="Center"/>
-                </ListBoxItem>
-            </ListBox>
-            <TextBlock Text="|" Margin="20,0,20,0" FontSize="30" FontWeight="ExtraLight" />
 
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Name="X1TextBlock" Text="X1" FontSize="14" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                <TextBox Name="X1TextBox" FontSize="14" Height="10" Width="80"/>
-                <TextBlock Name="Y1TextBlock" Text="Y1" FontSize="14" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                <TextBox Name="Y1TextBox" FontSize="14" Height="10" Width="80"/>
+        <CommandBar IsSticky="True" IsOpen="False" Background="#474747">
+            <CommandBar.Content>
+                <StackPanel Name="PaintMenu" Orientation="Horizontal" Background="#474747" VerticalAlignment="Center">
+                    <TextBlock Name="Title" Text="MyPaint" FontSize="26" Margin="20,0,20,0" VerticalAlignment="Center" Width="200" Foreground="#eee61a"/>
 
-                <TextBlock Name="X2TextBlock" Text="X2" FontSize="14" VerticalAlignment="Center" Margin="30,0,5,0"/>
-                <TextBox Name="X2TextBox" FontSize="14" Height="10" Width="80"/>
-                <TextBlock Name="Y2TextBlock" Text="Y2" FontSize="14" VerticalAlignment="Center" Margin="10,0,5,0"/>
-                <TextBox Name="Y2TextBox" FontSize="14" Height="10" Width="80"/>
+                    <TextBlock Text="|" Margin="20,0,20,0" FontSize="30" FontWeight="ExtraLight" />
+                    <ListBox Name="SelectShapeListBox" SelectionMode="Single" SelectionChanged="SelectMenuListBox_SelectionChanged" Width="200" Height="50" Background="#474747" Margin="20,0,20,0" ItemContainerStyle="{ui:StaticResource MyStyleOfListBox}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBoxItem Name="CursorListBoxItem" Width="50" ToolTipService.ToolTip="Cursor" ToolTipService.Placement="Bottom" IsSelected="True">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text=" &#xE1E3;" FontSize="20" TextAlignment="Center"/>
+                        </ListBoxItem>
+                        <ListBoxItem Name="LineListBoxItem" Width="50" ToolTipService.ToolTip="Draw Line" ToolTipService.Placement="Bottom">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8DB;" FontSize="20" TextAlignment="Center"/>
+                        </ListBoxItem>
+                        <ListBoxItem Name="RectangleListBoxItem" Width="50" ToolTipService.ToolTip="Draw Rectangle" ToolTipService.Placement="Bottom" >
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE003;" FontSize="20" HorizontalAlignment="Center"/>
+                        </ListBoxItem>
+                        <ListBoxItem Name="CircleListBoxItem" Width="50" ToolTipService.ToolTip="Draw Circle" ToolTipService.Placement="Bottom">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEA3A;" FontSize="20" HorizontalAlignment="Center"/>
+                        </ListBoxItem>
+                    </ListBox>
+                    <TextBlock Text="|" Margin="20,0,20,0" FontSize="30" FontWeight="ExtraLight" />
 
-                <Button Name="ConfirmDimensions" Content="Confirm" FontSize="14" Margin="30,0,0,0" Click="ConfirmDimensions_Click"/>
-            </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Name="X1TextBlock" Text="X1" FontSize="14" VerticalAlignment="Center" Margin="10,0,5,0"/>
+                        <TextBox Name="X1TextBox" FontSize="14" Height="10" Width="80"/>
+                        <TextBlock Name="Y1TextBlock" Text="Y1" FontSize="14" VerticalAlignment="Center" Margin="10,0,5,0"/>
+                        <TextBox Name="Y1TextBox" FontSize="14" Height="10" Width="80"/>
 
-        </StackPanel>
+                        <TextBlock Name="X2TextBlock" Text="X2" FontSize="14" VerticalAlignment="Center" Margin="30,0,5,0"/>
+                        <TextBox Name="X2TextBox" FontSize="14" Height="10" Width="80"/>
+                        <TextBlock Name="Y2TextBlock" Text="Y2" FontSize="14" VerticalAlignment="Center" Margin="10,0,5,0"/>
+                        <TextBox Name="Y2TextBox" FontSize="14" Height="10" Width="80"/>
 
-        <Canvas Name="MyCanvas" Grid.Row="1" Background="GreenYellow"
-            AllowDrop="True" DragOver="Shape_DragOver" Drop="Shape_Drop">
+                        <Button Name="ConfirmDimensions" Content="Confirm" FontSize="14" Margin="30,0,0,0" Click="ConfirmDimensions_Click" Background="LightGray"
+                                BorderBrush="Black" BorderThickness="2" Style="{ui:StaticResource MyButtonStyle}"/>
+                    </StackPanel>
 
-            <!--<Line Name="qwe" X1="0" Y1="0" X2="200" Y2="-200" Stroke="AntiqueWhite"/>-->
-        </Canvas>
+                </StackPanel>
+            </CommandBar.Content>
+            <CommandBar.PrimaryCommands>
+                <!--<AppBarButton Icon="Add"
+                              Label="Add" />
+                <AppBarButton Icon="Remove"
+                              Label="Remove" />-->
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Load file" Click="LoadFileClickAsync"/>
+                <AppBarButton Icon="Target"
+                              Label="Logout"/>
+                <AppBarSeparator />
+                <AppBarButton Icon="ReShare"
+                              Label="Share"/>
+                <AppBarButton Icon="Help"
+                              Label="Help"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+
+
+        <Grid Grid.Row="1">
+            <ScrollViewer ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="20"
+                          HorizontalScrollBarVisibility="Visible" VerticalAlignment="Stretch" 
+                          HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Visible" 
+                          Height="auto" Width="1366">
+                <Border Height="4000" Width="8000">
+                    <Canvas Name="MyCanvas"  Background="#fff72b" Height="4000" Width="8000"
+                        AllowDrop="True" DragOver="Shape_DragOver" Drop="Shape_Drop">
+                    </Canvas>
+                </Border>
+            </ScrollViewer>
+        </Grid>
+
     </Grid>
+
 </Page>
