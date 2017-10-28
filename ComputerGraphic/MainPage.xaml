@@ -1705,6 +1705,37 @@
                 </ui:Setter.Value>
             </ui:Setter>
         </ui:Style>
+        <ui:Style x:Key="MyColorButtonStyle" TargetType="ui:Button">
+            <ui:Setter Property="Background" Value="{ui:ThemeResource ButtonBackground}"/>
+            <ui:Setter Property="Foreground" Value="{ui:ThemeResource ButtonForeground}"/>
+            <ui:Setter Property="BorderBrush" Value="{ui:ThemeResource ButtonBorderBrush}"/>
+            <ui:Setter Property="BorderThickness" Value="{ui:ThemeResource ButtonBorderThemeThickness}"/>
+            <ui:Setter Property="Padding" Value="8,4,8,4"/>
+            <ui:Setter Property="HorizontalAlignment" Value="Left"/>
+            <ui:Setter Property="VerticalAlignment" Value="Center"/>
+            <ui:Setter Property="FontFamily" Value="{ui:ThemeResource ContentControlThemeFontFamily}"/>
+            <ui:Setter Property="FontWeight" Value="Normal"/>
+            <ui:Setter Property="FontSize" Value="{ui:ThemeResource ControlContentThemeFontSize}"/>
+            <ui:Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <ui:Setter Property="Template">
+                <ui:Setter.Value>
+                    <ui:ControlTemplate TargetType="ui:Button">
+                        <ui:Grid x:Name="RootGrid" Background="{ui:TemplateBinding Background}">
+                            <ui:VisualStateManager.VisualStateGroups>
+                                <ui:VisualStateGroup x:Name="CommonStates">
+                                    <ui:VisualState x:Name="Normal">
+                                        <ui:Storyboard>
+                                            <ui:PointerUpThemeAnimation ui:Storyboard.TargetName="RootGrid"/>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                            </ui:VisualStateManager.VisualStateGroups>
+                            <ui:ContentPresenter x:Name="ContentPresenter" ui:AutomationProperties.AccessibilityView="Raw" BorderBrush="{ui:TemplateBinding BorderBrush}" BorderThickness="{ui:TemplateBinding BorderThickness}" ContentTemplate="{ui:TemplateBinding ContentTemplate}" ContentTransitions="{ui:TemplateBinding ContentTransitions}" Content="{ui:TemplateBinding Content}" HorizontalContentAlignment="{ui:TemplateBinding HorizontalContentAlignment}" Padding="{ui:TemplateBinding Padding}" VerticalContentAlignment="{ui:TemplateBinding VerticalContentAlignment}"/>
+                        </ui:Grid>
+                    </ui:ControlTemplate>
+                </ui:Setter.Value>
+            </ui:Setter>
+        </ui:Style>
     </ui:Page.Resources>
 
     <Grid Background="Black">
@@ -1722,7 +1753,7 @@
                     <TextBlock Text="|" Margin="20,0,20,0" FontSize="30" FontWeight="ExtraLight" />
 
                     <Button Name="ColorButton"  ToolTipService.ToolTip="Change color" ToolTipService.Placement="Bottom"
-                            Width="30" Height="30" Click="ColorButton_Click" Background="White"/>
+                            Width="30" Height="30" Click="ColorButton_Click" Background="White" Style="{ui:StaticResource MyColorButtonStyle}"/>
 
 
                     <ListBox Name="SelectShapeListBox" SelectionMode="Single" SelectionChanged="SelectMenuListBox_SelectionChanged" Width="200" Height="50" Background="#474747" Margin="20,0,20,0" ItemContainerStyle="{ui:StaticResource MyStyleOfListBox}">
@@ -1785,6 +1816,52 @@
 
         <Grid Grid.Row="1">
 
+            <Popup Name="ColorPickerPopup" IsOpen="False">
+                <StackPanel Background="DarkGray" Margin="5,5,0,0" Orientation="Vertical">
+                    <Controls:ColorPicker x:Name="ColorPicker" Height="258" Width="374" Margin="5, 5, 5, 15"
+                                                      ColorChanged="Colorpick_ColorChanged" Visibility="Visible"/>
+                    <StackPanel Orientation="Vertical" Margin="9,0,5,15" >
+                        <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                            <TextBlock x:Name="RTextBlock" Text="R" Width="30" TextWrapping="Wrap" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBox x:Name="RTextBox" Height="32" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                            <Slider x:Name="RSlider" Width="200" Maximum="255" Minimum="0" VerticalAlignment="Center" ValueChanged="SliderRGB_ValueChanged" Style="{ui:StaticResource RSlider}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                            <TextBlock x:Name="GTextBlock" Text="G" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBox x:Name="GTextBox" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                            <Slider x:Name="GSlider" Width="200" Maximum="255" Minimum="0" VerticalAlignment="Center" ValueChanged="SliderRGB_ValueChanged" Style="{ui:StaticResource GSlider}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                            <TextBlock x:Name="BTextBlock" Text="B" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBox x:Name="BTextBox" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False"  Style="{ui:StaticResource MyTextBoxDisable}"/>
+                            <Slider x:Name="BSlider" Width="200" Maximum="255" Minimum="0" VerticalAlignment="Center" ValueChanged="SliderRGB_ValueChanged" Style="{ui:StaticResource BSlider}"/>
+                        </StackPanel>
+
+                        <Border BorderBrush="Gray" BorderThickness="1" Width="292" Margin="5,15" HorizontalAlignment="Left"/>
+
+                        <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                            <TextBlock x:Name="CTextBlock" Text="C" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBox x:Name="CTextBox"  FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                            <Slider x:Name="CSlider" Width="200" Maximum="1" Minimum="0" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource CSlider}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                            <TextBlock x:Name="MTextBlock" Text="M" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBox x:Name="MTextBox" FontSize="16"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"  IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                            <Slider x:Name="MSlider" Width="200" Maximum="1" Minimum="0" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource MSlider}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                            <TextBlock x:Name="YTextBlock" Text="Y" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBox x:Name="YTextBox" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                            <Slider x:Name="YSlider" Width="200" Maximum="1" Minimum="0" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource YSlider}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                            <TextBlock x:Name="KTextBlock" Text="K" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBox x:Name="KTextBox" FontSize="16" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                            <Slider x:Name="KSlider" Width="200" Maximum="1.00" Minimum="0.00" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource KSlider}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Popup>
 
             <ScrollViewer ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="20"
                           HorizontalScrollBarVisibility="Visible" VerticalAlignment="Stretch" 
@@ -1792,53 +1869,7 @@
                           Height="auto" Width="1366">
                 <Border Height="4000" Width="8000">
                     <Canvas Name="MyCanvas"  Background="#fff72b" Height="4000" Width="8000"
-                        AllowDrop="True" DragOver="Shape_DragOver" Drop="Shape_Drop" Margin="33,-10,-33,10">
-                        <Popup Name="ColorPickerPopup" IsOpen="False">
-                            <StackPanel Background="DarkGray" Margin="5,15,0,0" Orientation="Vertical">
-                                <Controls:ColorPicker x:Name="ColorPicker" Height="258" Width="374" Margin="5, 5, 5, 15"
-                                                      ColorChanged="Colorpick_ColorChanged" Visibility="Visible"/>
-                                <StackPanel Orientation="Vertical" Margin="9,0,5,25" >
-                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
-                                        <TextBlock x:Name="RTextBlock" Text="R" Width="30" TextWrapping="Wrap" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <TextBox x:Name="RTextBox" Height="32" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
-                                        <Slider x:Name="RSlider" Width="200" Maximum="255" Minimum="0" VerticalAlignment="Center" ValueChanged="SliderRGB_ValueChanged" Style="{ui:StaticResource RSlider}"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
-                                        <TextBlock x:Name="GTextBlock" Text="G" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <TextBox x:Name="GTextBox" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
-                                        <Slider x:Name="GSlider" Width="200" Maximum="255" Minimum="0" VerticalAlignment="Center" ValueChanged="SliderRGB_ValueChanged" Style="{ui:StaticResource GSlider}"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
-                                        <TextBlock x:Name="BTextBlock" Text="B" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <TextBox x:Name="BTextBox" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False"  Style="{ui:StaticResource MyTextBoxDisable}"/>
-                                        <Slider x:Name="BSlider" Width="200" Maximum="255" Minimum="0" VerticalAlignment="Center" ValueChanged="SliderRGB_ValueChanged" Style="{ui:StaticResource BSlider}"/>
-                                    </StackPanel>
-
-                                    <Border BorderBrush="Gray" BorderThickness="1" Width="292" Margin="5,15" HorizontalAlignment="Left"/>
-
-                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
-                                        <TextBlock x:Name="CTextBlock" Text="C" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <TextBox x:Name="CTextBox"  FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
-                                        <Slider x:Name="CSlider" Width="200" Maximum="1" Minimum="0" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource CSlider}"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
-                                        <TextBlock x:Name="MTextBlock" Text="M" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <TextBox x:Name="MTextBox" FontSize="16"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"  IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
-                                        <Slider x:Name="MSlider" Width="200" Maximum="1" Minimum="0" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource MSlider}"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
-                                        <TextBlock x:Name="YTextBlock" Text="Y" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <TextBox x:Name="YTextBox" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
-                                        <Slider x:Name="YSlider" Width="200" Maximum="1" Minimum="0" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource YSlider}"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
-                                        <TextBlock x:Name="KTextBlock" Text="K" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <TextBox x:Name="KTextBox" FontSize="16" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
-                                        <Slider x:Name="KSlider" Width="200" Maximum="1.00" Minimum="0.00" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource KSlider}"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </StackPanel>
-                        </Popup>
+                        AllowDrop="True" DragOver="Shape_DragOver" Drop="Shape_Drop" Margin="-33,-10,-33,10">
                     </Canvas>
                 </Border>
             </ScrollViewer>

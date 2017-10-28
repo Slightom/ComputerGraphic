@@ -864,6 +864,7 @@ namespace ComputerGraphic
 
         private Brush brush;
         private Color color;
+        public Color colorLighter;
         private bool CMYKSlidersChangingColorFlag = false;
         private bool RGBSlidersChangingColorFlag = false;
         private bool ColorPickerChangingColorFlag = false;
@@ -871,6 +872,7 @@ namespace ComputerGraphic
         private void InitColorPicker()
         {
             color = Colors.White;
+            this.colorLighter = setLighterColor(color);
             brush = new SolidColorBrush(color);
             ColorButton.Background = brush;
             ColorPicker.Color = color;
@@ -891,107 +893,109 @@ namespace ComputerGraphic
             ColorPickerChangingColorFlag = true;
             //update color
             this.color = color;
+            this.colorLighter = setLighterColor(color);
             brush = new SolidColorBrush(color);
 
-            //update RGB section 
-            RTextBox.Text = Convert.ToInt32(color.R).ToString();
-            GTextBox.Text = Convert.ToInt32(color.G).ToString();
-            BTextBox.Text = Convert.ToInt32(color.B).ToString();
-            RSlider.Value = Convert.ToInt32(color.R);
-            GSlider.Value = Convert.ToInt32(color.G);
-            BSlider.Value = Convert.ToInt32(color.B);
+            if(!CMYKSlidersChangingColorFlag)
+            {
+                //update RGB section 
+                RTextBox.Text = Convert.ToInt32(color.R).ToString();
+                GTextBox.Text = Convert.ToInt32(color.G).ToString();
+                BTextBox.Text = Convert.ToInt32(color.B).ToString();
+                RSlider.Value = Convert.ToInt32(color.R);
+                GSlider.Value = Convert.ToInt32(color.G);
+                BSlider.Value = Convert.ToInt32(color.B);
 
-            //update CMYK section
-            var R2 = RSlider.Value / 255;
-            var G2 = GSlider.Value / 255;
-            var B2 = BSlider.Value / 255;
+                //update CMYK section
+                var R2 = RSlider.Value / 255;
+                var G2 = GSlider.Value / 255;
+                var B2 = BSlider.Value / 255;
 
-            KSlider.Value = (1 - Max(R2, G2, B2));
-            CSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - R2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
-            MSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - G2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
-            YSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - B2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
-            KTextBox.Text = KSlider.Value.ToString();
-            CTextBox.Text = CSlider.Value.ToString();
-            MTextBox.Text = MSlider.Value.ToString();
-            YTextBox.Text = YSlider.Value.ToString();
+                KSlider.Value = Math.Round((1 - Max(R2, G2, B2)), 4);
+                CSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - R2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
+                MSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - G2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
+                YSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - B2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
+                KTextBox.Text = KSlider.Value.ToString();
+                CTextBox.Text = CSlider.Value.ToString();
+                MTextBox.Text = MSlider.Value.ToString();
+                YTextBox.Text = YSlider.Value.ToString();
+            }
+            else
+            {
+                //update CMYK textboxes
+                KTextBox.Text = Math.Round(KSlider.Value, 4).ToString();
+                CTextBox.Text = Math.Round(CSlider.Value, 4).ToString();
+                MTextBox.Text = Math.Round(MSlider.Value, 4).ToString();
+                YTextBox.Text = Math.Round(YSlider.Value, 4).ToString();
+
+                //update RGB section 
+                RTextBox.Text = Convert.ToInt32(color.R).ToString();
+                GTextBox.Text = Convert.ToInt32(color.G).ToString();
+                BTextBox.Text = Convert.ToInt32(color.B).ToString();
+                RSlider.Value = Convert.ToInt32(color.R);
+                GSlider.Value = Convert.ToInt32(color.G);
+                BSlider.Value = Convert.ToInt32(color.B);
+            }
 
             //update colorButton
             ColorButton.Background = brush;
             ColorPickerChangingColorFlag = false;
         }
+       
 
         private void SliderRGB_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            RGBSlidersChangingColorFlag = true;
+            if(!ColorPickerChangingColorFlag)
+            {
+                RGBSlidersChangingColorFlag = true;
 
-            //update color
-            color = Color.FromArgb(255, (byte)RSlider.Value, (byte)GSlider.Value, (byte)BSlider.Value);
-            brush = new SolidColorBrush(color);
+                //update color
+                color = Color.FromArgb(255, (byte)RSlider.Value, (byte)GSlider.Value, (byte)BSlider.Value);
+                brush = new SolidColorBrush(color);
 
-            ////update RGB textboxes
-            //RTextBox.Text = RSlider.Value.ToString();
-            //GTextBox.Text = GSlider.Value.ToString();
-            //BTextBox.Text = BSlider.Value.ToString();
+                //update ColorPicker
+                ColorPicker.Background = brush;
+                ColorPicker.Color = color;
+                Colorpick_ColorChanged(sender, color);
 
-            //// update CMYK section
-            //var R2 = RSlider.Value / 255;
-            //var G2 = GSlider.Value / 255;
-            //var B2 = BSlider.Value / 255;
-
-            //KSlider.Value = (1 - Max(R2, G2, B2));
-            //CSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - R2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
-            //MSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - G2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
-            //YSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - B2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
-            //KTextBox.Text = KSlider.Value.ToString();
-            //CTextBox.Text = CSlider.Value.ToString();
-            //MTextBox.Text = MSlider.Value.ToString();
-            //YTextBox.Text = YSlider.Value.ToString();
-
-            ////update colorButton
-            //ColorButton.Background = brush;
-
-            //update ColorPicker
-            ColorPicker.Background = brush;
-            ColorPicker.Color = color;
-
-            RGBSlidersChangingColorFlag = false;
+                RGBSlidersChangingColorFlag = false;
+            }
         }        
 
         private void SliderCMYK_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            CMYKSlidersChangingColorFlag = true;
-            
-            //update color
-            var R = Math.Round(255 * (1 - CSlider.Value) * (1 - KSlider.Value));
-            var G = Math.Round(255 * (1 - MSlider.Value) * (1 - KSlider.Value));
-            var B = Math.Round(255 * (1 - YSlider.Value) * (1 - KSlider.Value));
-            color = Color.FromArgb(255, (byte)R, (byte)G, (byte)B);
-            brush = new SolidColorBrush(color);
+            if(!ColorPickerChangingColorFlag)
+            {
+                CMYKSlidersChangingColorFlag = true;
 
-            ////update CMYK textboxes
-            //KTextBox.Text = Math.Round(KSlider.Value, 4).ToString();
-            //CTextBox.Text = Math.Round(CSlider.Value, 4).ToString();
-            //MTextBox.Text = Math.Round(MSlider.Value, 4).ToString();
-            //YTextBox.Text = Math.Round(YSlider.Value, 4).ToString();
+                //update color
+                var R = Math.Round(255 * (1 - CSlider.Value) * (1 - KSlider.Value));
+                var G = Math.Round(255 * (1 - MSlider.Value) * (1 - KSlider.Value));
+                var B = Math.Round(255 * (1 - YSlider.Value) * (1 - KSlider.Value));
+                color = Color.FromArgb(255, (byte)R, (byte)G, (byte)B);
+                brush = new SolidColorBrush(color);
 
-            ////update RGB section
-            //RSlider.Value = Math.Round(255 * (1 - CSlider.Value) * (1 - KSlider.Value));
-            //GSlider.Value = Math.Round(255 * (1 - MSlider.Value) * (1 - KSlider.Value));
-            //BSlider.Value = Math.Round(255 * (1 - YSlider.Value) * (1 - KSlider.Value));
-            //RTextBox.Text = RSlider.Value.ToString();
-            //GTextBox.Text = GSlider.Value.ToString();
-            //BTextBox.Text = BSlider.Value.ToString();
+                //update ColorPicker
+                ColorPicker.Background = brush;
+                ColorPicker.Color = color;
+                Colorpick_ColorChanged(sender, color);
 
-            ////update colorButton
-            //ColorButton.Background = brush;
-
-            //update ColorPicker
-            ColorPicker.Background = brush;
-            ColorPicker.Color = color;
-
-            CMYKSlidersChangingColorFlag = false;
+                CMYKSlidersChangingColorFlag = false;
+            }
         }
 
+        private Color setLighterColor(Color color)
+        {
+            int r = Convert.ToInt32(color.R) + 10;
+            int g = Convert.ToInt32(color.G) + 10;
+            int b = Convert.ToInt32(color.B) + 10;
+
+            if (r > 255) { r = 255; }
+            if (g > 255) { g = 255; }
+            if (b > 255) { b = 255; }
+
+            return Color.FromArgb(255, (byte)r, (byte)g, (byte)b);
+        }
 
         private double Max(double r2, double g2, double b2)
         {
