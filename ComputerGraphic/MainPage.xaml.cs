@@ -23,6 +23,8 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 
+
+
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace ComputerGraphic
@@ -43,6 +45,7 @@ namespace ComputerGraphic
         private Shape selectedElement;
         private Image draggingImage;
         private Image selectedImage;
+        
 
         public MainPage()
         {
@@ -50,28 +53,13 @@ namespace ComputerGraphic
             Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
             pointerMovedHandlerIsAdded = false;
             pointerIsPressed = false;
+            PersonalizeTitleBar();
 
+            InitColorPicker();
             //BitmapImage b = new BitmapImage(new Uri("C:\\Users\\Slightom\\Downloads\\ppm-obrazy-testowe\\ppm-test-01-p3.ppm"));
             //myBitMap.Source = b;
         }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-
-            PersonalizeTitleBar();
-        }
-
-        private void PersonalizeTitleBar()
-        {
-            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-
-            titleBar.BackgroundColor = Colors.Black;
-            titleBar.ForegroundColor = Colors.White;
-
-            titleBar.ButtonBackgroundColor = Colors.Black;
-            titleBar.ButtonForegroundColor = Colors.White;
-        }
+       
 
         #region PAINT
 
@@ -175,7 +163,7 @@ namespace ComputerGraphic
                     case "LineListBoxItem":
                         Line l2 = new Line();
                         l2.Name = "l" + MyCanvas.Children.Count();
-                        l2.Stroke = new SolidColorBrush(Windows.UI.Colors.Blue);
+                        l2.Stroke = new SolidColorBrush(color);
                         l2.X1 = SmallerFrom(double.Parse(X1TextBox.Text), double.Parse(X2TextBox.Text));
                         l2.X2 = BiggerFrom(double.Parse(X1TextBox.Text), double.Parse(X2TextBox.Text));
                         l2.Y1 = (double.Parse(X1TextBox.Text) < double.Parse(X2TextBox.Text)) ? double.Parse(Y1TextBox.Text) : double.Parse(Y2TextBox.Text);
@@ -191,7 +179,7 @@ namespace ComputerGraphic
                         r.Name = "r" + MyCanvas.Children.Count();
                         r.Width = Modul(double.Parse(X1TextBox.Text) - double.Parse(X2TextBox.Text));
                         r.Height = Modul(double.Parse(Y1TextBox.Text) - double.Parse(Y2TextBox.Text));
-                        r.Stroke = new SolidColorBrush(Windows.UI.Colors.Black);
+                        r.Stroke = new SolidColorBrush(color);
                         r.StrokeThickness = 3;
                         r.DragStarting += Shape_DragStarting;
                         MyCanvas.Children.Add(r);
@@ -204,7 +192,7 @@ namespace ComputerGraphic
                         el.Width = Modul(double.Parse(X1TextBox.Text) - double.Parse(X2TextBox.Text));
                         el.Height = el.Width;
                         el.StrokeThickness = 3;
-                        el.Stroke = new SolidColorBrush(Windows.UI.Colors.Red);
+                        el.Stroke = new SolidColorBrush(color);
                         el.DragStarting += Shape_DragStarting;
                         MyCanvas.Children.Add(el);
                         Canvas.SetLeft(el, SmallerFrom(double.Parse(X1TextBox.Text), double.Parse(X2TextBox.Text)));
@@ -452,7 +440,7 @@ namespace ComputerGraphic
                 case "LineListBoxItem":
                     Line l2 = new Line();
                     l2.Name = "l" + MyCanvas.Children.Count();
-                    l2.Stroke = new SolidColorBrush(Windows.UI.Colors.Blue);
+                    l2.Stroke = new SolidColorBrush(color);
                     l2.X1 = Math.Round(SmallerFrom(double.Parse(X1TextBox.Text), double.Parse(X2TextBox.Text)), 0);
                     l2.Y1 = Math.Round((double.Parse(X1TextBox.Text) < double.Parse(X2TextBox.Text)) ? double.Parse(Y1TextBox.Text) : double.Parse(Y2TextBox.Text), 0);
                     l2.X2 = Math.Round(BiggerFrom(double.Parse(X1TextBox.Text), double.Parse(X2TextBox.Text)), 0);
@@ -470,7 +458,7 @@ namespace ComputerGraphic
                     r.Name = "r" + MyCanvas.Children.Count();
                     r.Width = Math.Round(Modul(double.Parse(X1TextBox.Text) - double.Parse(X2TextBox.Text)), 0);
                     r.Height = Math.Round(Modul(double.Parse(Y1TextBox.Text) - double.Parse(Y2TextBox.Text)), 0);
-                    r.Stroke = new SolidColorBrush(Windows.UI.Colors.Black);
+                    r.Stroke = new SolidColorBrush(color);
                     r.StrokeThickness = 3;
                     r.DragStarting += Shape_DragStarting;
                     MyCanvas.Children.Add(r);
@@ -484,7 +472,7 @@ namespace ComputerGraphic
                     el.Width = Math.Round(Modul(double.Parse(X1TextBox.Text) - double.Parse(X2TextBox.Text)), 0);
                     el.Height = el.Width;
                     el.StrokeThickness = 3;
-                    el.Stroke = new SolidColorBrush(Windows.UI.Colors.Red);
+                    el.Stroke = new SolidColorBrush(color);
                     el.DragStarting += Shape_DragStarting;
                     MyCanvas.Children.Add(el);
                     Canvas.SetLeft(el, Math.Round(SmallerFrom(double.Parse(X1TextBox.Text), double.Parse(X2TextBox.Text)), 0));
@@ -868,9 +856,158 @@ namespace ComputerGraphic
             reader.BaseStream.Seek(-1, SeekOrigin.Current);
         }
 
+
+
         #endregion
 
+        #region ColorPicker
+
+        private Brush brush;
+        private Color color;
+        private bool CMYKSlidersChangingColorFlag = false;
+        private bool RGBSlidersChangingColorFlag = false;
+        private bool ColorPickerChangingColorFlag = false;
+
+        private void InitColorPicker()
+        {
+            color = Colors.White;
+            brush = new SolidColorBrush(color);
+            ColorButton.Background = brush;
+            ColorPicker.Color = color;
+
+            RSlider.Value = GSlider.Value = BSlider.Value = 255;
+            RTextBox.Text = GTextBox.Text = BTextBox.Text = 255.ToString();
+            KSlider.Value = CSlider.Value = MSlider.Value = YSlider.Value = 0;
+            KTextBox.Text = CTextBox.Text = MTextBox.Text = YTextBox.Text = 0.ToString();
+        }
+    
+        private void ColorButton_Click(object sender, RoutedEventArgs e)
+        {
+            ColorPickerPopup.IsOpen = !ColorPickerPopup.IsOpen;
+        }
+
+        private void Colorpick_ColorChanged(object sender, Color color)
+        {
+            ColorPickerChangingColorFlag = true;
+            //update color
+            this.color = color;
+            brush = new SolidColorBrush(color);
+
+            //update RGB section 
+            RTextBox.Text = Convert.ToInt32(color.R).ToString();
+            GTextBox.Text = Convert.ToInt32(color.G).ToString();
+            BTextBox.Text = Convert.ToInt32(color.B).ToString();
+            RSlider.Value = Convert.ToInt32(color.R);
+            GSlider.Value = Convert.ToInt32(color.G);
+            BSlider.Value = Convert.ToInt32(color.B);
+
+            //update CMYK section
+            var R2 = RSlider.Value / 255;
+            var G2 = GSlider.Value / 255;
+            var B2 = BSlider.Value / 255;
+
+            KSlider.Value = (1 - Max(R2, G2, B2));
+            CSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - R2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
+            MSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - G2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
+            YSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - B2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
+            KTextBox.Text = KSlider.Value.ToString();
+            CTextBox.Text = CSlider.Value.ToString();
+            MTextBox.Text = MSlider.Value.ToString();
+            YTextBox.Text = YSlider.Value.ToString();
+
+            //update colorButton
+            ColorButton.Background = brush;
+            ColorPickerChangingColorFlag = false;
+        }
+
+        private void SliderRGB_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            RGBSlidersChangingColorFlag = true;
+
+            //update color
+            color = Color.FromArgb(255, (byte)RSlider.Value, (byte)GSlider.Value, (byte)BSlider.Value);
+            brush = new SolidColorBrush(color);
+
+            ////update RGB textboxes
+            //RTextBox.Text = RSlider.Value.ToString();
+            //GTextBox.Text = GSlider.Value.ToString();
+            //BTextBox.Text = BSlider.Value.ToString();
+
+            //// update CMYK section
+            //var R2 = RSlider.Value / 255;
+            //var G2 = GSlider.Value / 255;
+            //var B2 = BSlider.Value / 255;
+
+            //KSlider.Value = (1 - Max(R2, G2, B2));
+            //CSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - R2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
+            //MSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - G2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
+            //YSlider.Value = (KSlider.Value != 1) ? Math.Round((1 - B2 - KSlider.Value) / (1 - KSlider.Value), 4) : 0;
+            //KTextBox.Text = KSlider.Value.ToString();
+            //CTextBox.Text = CSlider.Value.ToString();
+            //MTextBox.Text = MSlider.Value.ToString();
+            //YTextBox.Text = YSlider.Value.ToString();
+
+            ////update colorButton
+            //ColorButton.Background = brush;
+
+            //update ColorPicker
+            ColorPicker.Background = brush;
+            ColorPicker.Color = color;
+
+            RGBSlidersChangingColorFlag = false;
+        }        
+
+        private void SliderCMYK_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            CMYKSlidersChangingColorFlag = true;
+            
+            //update color
+            var R = Math.Round(255 * (1 - CSlider.Value) * (1 - KSlider.Value));
+            var G = Math.Round(255 * (1 - MSlider.Value) * (1 - KSlider.Value));
+            var B = Math.Round(255 * (1 - YSlider.Value) * (1 - KSlider.Value));
+            color = Color.FromArgb(255, (byte)R, (byte)G, (byte)B);
+            brush = new SolidColorBrush(color);
+
+            ////update CMYK textboxes
+            //KTextBox.Text = Math.Round(KSlider.Value, 4).ToString();
+            //CTextBox.Text = Math.Round(CSlider.Value, 4).ToString();
+            //MTextBox.Text = Math.Round(MSlider.Value, 4).ToString();
+            //YTextBox.Text = Math.Round(YSlider.Value, 4).ToString();
+
+            ////update RGB section
+            //RSlider.Value = Math.Round(255 * (1 - CSlider.Value) * (1 - KSlider.Value));
+            //GSlider.Value = Math.Round(255 * (1 - MSlider.Value) * (1 - KSlider.Value));
+            //BSlider.Value = Math.Round(255 * (1 - YSlider.Value) * (1 - KSlider.Value));
+            //RTextBox.Text = RSlider.Value.ToString();
+            //GTextBox.Text = GSlider.Value.ToString();
+            //BTextBox.Text = BSlider.Value.ToString();
+
+            ////update colorButton
+            //ColorButton.Background = brush;
+
+            //update ColorPicker
+            ColorPicker.Background = brush;
+            ColorPicker.Color = color;
+
+            CMYKSlidersChangingColorFlag = false;
+        }
 
 
+        private double Max(double r2, double g2, double b2)
+        {
+            return Math.Round(Math.Max(Math.Max(r2, g2), b2), 4);
+        }
+
+        private void PersonalizeTitleBar()
+        {
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+
+            titleBar.BackgroundColor = Colors.Black;
+            titleBar.ForegroundColor = Colors.White;
+
+            titleBar.ButtonBackgroundColor = Colors.Black;
+            titleBar.ButtonForegroundColor = Colors.White;
+        }
+        #endregion
     }
 }

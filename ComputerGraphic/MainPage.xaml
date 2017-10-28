@@ -6,7 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Windows.UI.Xaml.Controls"
-    xmlns:ui="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
+    xmlns:ui="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:Controls="using:Coding4Fun.Toolkit.Controls"
+    xmlns:uc="clr-namespace:System.Windows.Controls"
     mc:Ignorable="d"
     Width="1366"
     Height="696"
@@ -190,6 +192,1519 @@
                 </ui:Setter.Value>
             </ui:Setter>
         </ui:Style>
+        <ui:Style x:Key="RSlider" TargetType="ui:Slider">
+            <ui:Setter Property="Background" Value="{ui:ThemeResource SliderTrackFill}"/>
+            <ui:Setter Property="BorderThickness" Value="{ui:ThemeResource SliderBorderThemeThickness}"/>
+            <ui:Setter Property="Foreground" Value="Red"/>
+            <ui:Setter Property="FontFamily" Value="{ui:ThemeResource ContentControlThemeFontFamily}"/>
+            <ui:Setter Property="FontSize" Value="{ui:ThemeResource ControlContentThemeFontSize}"/>
+            <ui:Setter Property="ManipulationMode" Value="None"/>
+            <ui:Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <ui:Setter Property="FocusVisualMargin" Value="-7,0,-7,0"/>
+            <ui:Setter Property="IsFocusEngagementEnabled" Value="True"/>
+            <ui:Setter Property="Template">
+                <ui:Setter.Value>
+                    <ui:ControlTemplate TargetType="ui:Slider">
+                        <ui:Grid Margin="{ui:TemplateBinding Padding}">
+                            <ui:Grid.Resources>
+                                <ui:Style x:Key="SliderThumbStyle" TargetType="ui:Thumb">
+                                    <ui:Setter Property="BorderThickness" Value="0"/>
+                                    <ui:Setter Property="Background" Value="{ui:ThemeResource SliderThumbBackground}"/>
+                                    <ui:Setter Property="Template">
+                                        <ui:Setter.Value>
+                                            <ui:ControlTemplate TargetType="ui:Thumb">
+                                                <ui:Border BorderBrush="{ui:TemplateBinding BorderBrush}" BorderThickness="{ui:TemplateBinding BorderThickness}" Background="{ui:TemplateBinding Background}" CornerRadius="4"/>
+                                            </ui:ControlTemplate>
+                                        </ui:Setter.Value>
+                                    </ui:Setter>
+                                </ui:Style>
+                            </ui:Grid.Resources>
+                            <ui:Grid.RowDefinitions>
+                                <ui:RowDefinition Height="Auto"/>
+                                <ui:RowDefinition Height="*"/>
+                            </ui:Grid.RowDefinitions>
+                            <ui:VisualStateManager.VisualStateGroups>
+                                <ui:VisualStateGroup x:Name="CommonStates">
+                                    <ui:VisualState x:Name="Normal"/>
+                                    <ui:VisualState x:Name="Pressed">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Red"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Red"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Disabled">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="HeaderContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderHeaderForegroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Red"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="TopTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="BottomTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="LeftTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="RightTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="PointerOver">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Red"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                                <ui:VisualStateGroup x:Name="FocusEngagementStates">
+                                    <ui:VisualState x:Name="FocusDisengaged"/>
+                                    <ui:VisualState x:Name="FocusEngagedHorizontal">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="FocusEngagedVertical">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                            </ui:VisualStateManager.VisualStateGroups>
+                            <ui:ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{ui:TemplateBinding HeaderTemplate}" Content="{ui:TemplateBinding Header}" Foreground="{ui:ThemeResource SliderHeaderForeground}" FontWeight="{ui:ThemeResource SliderHeaderThemeFontWeight}" Margin="{ui:ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+                            <ui:Grid x:Name="SliderContainer" Background="{ui:ThemeResource SliderContainerBackground}" ui:Control.IsTemplateFocusTarget="True" ui:Grid.Row="1">
+                                <ui:Grid x:Name="HorizontalTemplate" MinHeight="44">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="*"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="18"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="18"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="HorizontalTrackRect" ui:Grid.ColumnSpan="3" Fill="{ui:TemplateBinding Background}" Height="4" ui:Grid.Row="1"/>
+                                    <ui:Rectangle x:Name="HorizontalDecreaseRect" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="1"/>
+                                    <ui:TickBar x:Name="TopTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,0,0,4" Visibility="Collapsed" VerticalAlignment="Bottom"/>
+                                    <ui:TickBar x:Name="HorizontalInlineTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderInlineTickBarFill}" Height="{ui:ThemeResource SliderTrackThemeHeight}" ui:Grid.Row="1" Visibility="Collapsed"/>
+                                    <ui:TickBar x:Name="BottomTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,4,0,0" ui:Grid.Row="2" Visibility="Collapsed" VerticalAlignment="Top"/>
+                                    <ui:Thumb x:Name="HorizontalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.Column="1" DataContext="{ui:TemplateBinding Value}" Height="24" ui:Grid.Row="0" ui:Grid.RowSpan="3" Style="{ui:StaticResource SliderThumbStyle}" Width="8"/>
+                                </ui:Grid>
+                                <ui:Grid x:Name="VerticalTemplate" MinWidth="44" Visibility="Collapsed">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="18"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="18"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="*"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="VerticalTrackRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Background}" ui:Grid.RowSpan="3" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:Rectangle x:Name="VerticalDecreaseRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="2"/>
+                                    <ui:TickBar x:Name="LeftTickBar" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Right" Margin="0,0,4,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:TickBar x:Name="VerticalInlineTickBar" ui:Grid.Column="1" Fill="{ui:ThemeResource SliderInlineTickBarFill}" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:TickBar x:Name="RightTickBar" ui:Grid.Column="2" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Left" Margin="4,0,0,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:Thumb x:Name="VerticalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.ColumnSpan="3" ui:Grid.Column="0" DataContext="{ui:TemplateBinding Value}"  Height="8" ui:Grid.Row="1" Style="{ui:StaticResource SliderThumbStyle}" Width="24"/>
+                                </ui:Grid>
+                            </ui:Grid>
+                        </ui:Grid>
+                    </ui:ControlTemplate>
+                </ui:Setter.Value>
+            </ui:Setter>
+        </ui:Style>
+        <ui:Style x:Key="GSlider" TargetType="ui:Slider">
+            <ui:Setter Property="Background" Value="{ui:ThemeResource SliderTrackFill}"/>
+            <ui:Setter Property="BorderThickness" Value="{ui:ThemeResource SliderBorderThemeThickness}"/>
+            <ui:Setter Property="Foreground" Value="Green"/>
+            <ui:Setter Property="FontFamily" Value="{ui:ThemeResource ContentControlThemeFontFamily}"/>
+            <ui:Setter Property="FontSize" Value="{ui:ThemeResource ControlContentThemeFontSize}"/>
+            <ui:Setter Property="ManipulationMode" Value="None"/>
+            <ui:Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <ui:Setter Property="FocusVisualMargin" Value="-7,0,-7,0"/>
+            <ui:Setter Property="IsFocusEngagementEnabled" Value="True"/>
+            <ui:Setter Property="Template">
+                <ui:Setter.Value>
+                    <ui:ControlTemplate TargetType="ui:Slider">
+                        <ui:Grid Margin="{ui:TemplateBinding Padding}">
+                            <ui:Grid.Resources>
+                                <ui:Style x:Key="SliderThumbStyle" TargetType="ui:Thumb">
+                                    <ui:Setter Property="BorderThickness" Value="0"/>
+                                    <ui:Setter Property="Background" Value="{ui:ThemeResource SliderThumbBackground}"/>
+                                    <ui:Setter Property="Template">
+                                        <ui:Setter.Value>
+                                            <ui:ControlTemplate TargetType="ui:Thumb">
+                                                <ui:Border BorderBrush="{ui:TemplateBinding BorderBrush}" BorderThickness="{ui:TemplateBinding BorderThickness}" Background="{ui:TemplateBinding Background}" CornerRadius="4"/>
+                                            </ui:ControlTemplate>
+                                        </ui:Setter.Value>
+                                    </ui:Setter>
+                                </ui:Style>
+                            </ui:Grid.Resources>
+                            <ui:Grid.RowDefinitions>
+                                <ui:RowDefinition Height="Auto"/>
+                                <ui:RowDefinition Height="*"/>
+                            </ui:Grid.RowDefinitions>
+                            <ui:VisualStateManager.VisualStateGroups>
+                                <ui:VisualStateGroup x:Name="CommonStates">
+                                    <ui:VisualState x:Name="Normal"/>
+                                    <ui:VisualState x:Name="Pressed">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Green"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Disabled">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="HeaderContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderHeaderForegroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Green"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="TopTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="BottomTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="LeftTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="RightTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="PointerOver">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Green"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                                <ui:VisualStateGroup x:Name="FocusEngagementStates">
+                                    <ui:VisualState x:Name="FocusDisengaged"/>
+                                    <ui:VisualState x:Name="FocusEngagedHorizontal">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="FocusEngagedVertical">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                            </ui:VisualStateManager.VisualStateGroups>
+                            <ui:ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{ui:TemplateBinding HeaderTemplate}" Content="{ui:TemplateBinding Header}" Foreground="{ui:ThemeResource SliderHeaderForeground}" FontWeight="{ui:ThemeResource SliderHeaderThemeFontWeight}" Margin="{ui:ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+                            <ui:Grid x:Name="SliderContainer" Background="{ui:ThemeResource SliderContainerBackground}" ui:Control.IsTemplateFocusTarget="True" ui:Grid.Row="1">
+                                <ui:Grid x:Name="HorizontalTemplate" MinHeight="44">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="*"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="18"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="18"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="HorizontalTrackRect" ui:Grid.ColumnSpan="3" Fill="{ui:TemplateBinding Background}" Height="4" ui:Grid.Row="1"/>
+                                    <ui:Rectangle x:Name="HorizontalDecreaseRect" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="1"/>
+                                    <ui:TickBar x:Name="TopTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,0,0,4" Visibility="Collapsed" VerticalAlignment="Bottom"/>
+                                    <ui:TickBar x:Name="HorizontalInlineTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderInlineTickBarFill}" Height="{ui:ThemeResource SliderTrackThemeHeight}" ui:Grid.Row="1" Visibility="Collapsed"/>
+                                    <ui:TickBar x:Name="BottomTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,4,0,0" ui:Grid.Row="2" Visibility="Collapsed" VerticalAlignment="Top"/>
+                                    <ui:Thumb x:Name="HorizontalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.Column="1" DataContext="{ui:TemplateBinding Value}"   Height="24" ui:Grid.Row="0" ui:Grid.RowSpan="3" Style="{ui:StaticResource SliderThumbStyle}" Width="8"/>
+                                </ui:Grid>
+                                <ui:Grid x:Name="VerticalTemplate" MinWidth="44" Visibility="Collapsed">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="18"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="18"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="*"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="VerticalTrackRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Background}" ui:Grid.RowSpan="3" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:Rectangle x:Name="VerticalDecreaseRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="2"/>
+                                    <ui:TickBar x:Name="LeftTickBar" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Right" Margin="0,0,4,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:TickBar x:Name="VerticalInlineTickBar" ui:Grid.Column="1" Fill="{ui:ThemeResource SliderInlineTickBarFill}" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:TickBar x:Name="RightTickBar" ui:Grid.Column="2" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Left" Margin="4,0,0,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:Thumb x:Name="VerticalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.ColumnSpan="3" ui:Grid.Column="0" DataContext="{ui:TemplateBinding Value}"   Height="8" ui:Grid.Row="1" Style="{ui:StaticResource SliderThumbStyle}" Width="24"/>
+                                </ui:Grid>
+                            </ui:Grid>
+                        </ui:Grid>
+                    </ui:ControlTemplate>
+                </ui:Setter.Value>
+            </ui:Setter>
+        </ui:Style>
+        <ui:Style x:Key="BSlider" TargetType="ui:Slider">
+            <ui:Setter Property="Background" Value="{ui:ThemeResource SliderTrackFill}"/>
+            <ui:Setter Property="BorderThickness" Value="{ui:ThemeResource SliderBorderThemeThickness}"/>
+            <ui:Setter Property="Foreground" Value="Blue"/>
+            <ui:Setter Property="FontFamily" Value="{ui:ThemeResource ContentControlThemeFontFamily}"/>
+            <ui:Setter Property="FontSize" Value="{ui:ThemeResource ControlContentThemeFontSize}"/>
+            <ui:Setter Property="ManipulationMode" Value="None"/>
+            <ui:Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <ui:Setter Property="FocusVisualMargin" Value="-7,0,-7,0"/>
+            <ui:Setter Property="IsFocusEngagementEnabled" Value="True"/>
+            <ui:Setter Property="Template">
+                <ui:Setter.Value>
+                    <ui:ControlTemplate TargetType="ui:Slider">
+                        <ui:Grid Margin="{ui:TemplateBinding Padding}">
+                            <ui:Grid.Resources>
+                                <ui:Style x:Key="SliderThumbStyle" TargetType="ui:Thumb">
+                                    <ui:Setter Property="BorderThickness" Value="0"/>
+                                    <ui:Setter Property="Background" Value="{ui:ThemeResource SliderThumbBackground}"/>
+                                    <ui:Setter Property="Template">
+                                        <ui:Setter.Value>
+                                            <ui:ControlTemplate TargetType="ui:Thumb">
+                                                <ui:Border BorderBrush="{ui:TemplateBinding BorderBrush}" BorderThickness="{ui:TemplateBinding BorderThickness}" Background="{ui:TemplateBinding Background}" CornerRadius="4"/>
+                                            </ui:ControlTemplate>
+                                        </ui:Setter.Value>
+                                    </ui:Setter>
+                                </ui:Style>
+                            </ui:Grid.Resources>
+                            <ui:Grid.RowDefinitions>
+                                <ui:RowDefinition Height="Auto"/>
+                                <ui:RowDefinition Height="*"/>
+                            </ui:Grid.RowDefinitions>
+                            <ui:VisualStateManager.VisualStateGroups>
+                                <ui:VisualStateGroup x:Name="CommonStates">
+                                    <ui:VisualState x:Name="Normal"/>
+                                    <ui:VisualState x:Name="Pressed">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Blue"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Disabled">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="HeaderContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderHeaderForegroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Blue"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="TopTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="BottomTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="LeftTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="RightTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="PointerOver">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Blue"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                                <ui:VisualStateGroup x:Name="FocusEngagementStates">
+                                    <ui:VisualState x:Name="FocusDisengaged"/>
+                                    <ui:VisualState x:Name="FocusEngagedHorizontal">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="FocusEngagedVertical">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                            </ui:VisualStateManager.VisualStateGroups>
+                            <ui:ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{ui:TemplateBinding HeaderTemplate}" Content="{ui:TemplateBinding Header}" Foreground="{ui:ThemeResource SliderHeaderForeground}" FontWeight="{ui:ThemeResource SliderHeaderThemeFontWeight}" Margin="{ui:ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+                            <ui:Grid x:Name="SliderContainer" Background="{ui:ThemeResource SliderContainerBackground}" ui:Control.IsTemplateFocusTarget="True" ui:Grid.Row="1">
+                                <ui:Grid x:Name="HorizontalTemplate" MinHeight="44">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="*"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="18"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="18"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="HorizontalTrackRect" ui:Grid.ColumnSpan="3" Fill="{ui:TemplateBinding Background}" Height="4" ui:Grid.Row="1"/>
+                                    <ui:Rectangle x:Name="HorizontalDecreaseRect" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="1"/>
+                                    <ui:TickBar x:Name="TopTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,0,0,4" Visibility="Collapsed" VerticalAlignment="Bottom"/>
+                                    <ui:TickBar x:Name="HorizontalInlineTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderInlineTickBarFill}" Height="{ui:ThemeResource SliderTrackThemeHeight}" ui:Grid.Row="1" Visibility="Collapsed"/>
+                                    <ui:TickBar x:Name="BottomTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,4,0,0" ui:Grid.Row="2" Visibility="Collapsed" VerticalAlignment="Top"/>
+                                    <ui:Thumb x:Name="HorizontalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.Column="1" DataContext="{ui:TemplateBinding Value}"   Height="24" ui:Grid.Row="0" ui:Grid.RowSpan="3" Style="{ui:StaticResource SliderThumbStyle}" Width="8"/>
+                                </ui:Grid>
+                                <ui:Grid x:Name="VerticalTemplate" MinWidth="44" Visibility="Collapsed">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="18"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="18"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="*"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="VerticalTrackRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Background}" ui:Grid.RowSpan="3" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:Rectangle x:Name="VerticalDecreaseRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="2"/>
+                                    <ui:TickBar x:Name="LeftTickBar" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Right" Margin="0,0,4,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:TickBar x:Name="VerticalInlineTickBar" ui:Grid.Column="1" Fill="{ui:ThemeResource SliderInlineTickBarFill}" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:TickBar x:Name="RightTickBar" ui:Grid.Column="2" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Left" Margin="4,0,0,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:Thumb x:Name="VerticalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.ColumnSpan="3" ui:Grid.Column="0" DataContext="{ui:TemplateBinding Value}"   Height="8" ui:Grid.Row="1" Style="{ui:StaticResource SliderThumbStyle}" Width="24"/>
+                                </ui:Grid>
+                            </ui:Grid>
+                        </ui:Grid>
+                    </ui:ControlTemplate>
+                </ui:Setter.Value>
+            </ui:Setter>
+        </ui:Style>
+        <ui:Style x:Key="CSlider" TargetType="ui:Slider">
+            <ui:Setter Property="Background" Value="{ui:ThemeResource SliderTrackFill}"/>
+            <ui:Setter Property="BorderThickness" Value="{ui:ThemeResource SliderBorderThemeThickness}"/>
+            <ui:Setter Property="Foreground" Value="Cyan"/>
+            <ui:Setter Property="FontFamily" Value="{ui:ThemeResource ContentControlThemeFontFamily}"/>
+            <ui:Setter Property="FontSize" Value="{ui:ThemeResource ControlContentThemeFontSize}"/>
+            <ui:Setter Property="ManipulationMode" Value="None"/>
+            <ui:Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <ui:Setter Property="FocusVisualMargin" Value="-7,0,-7,0"/>
+            <ui:Setter Property="IsFocusEngagementEnabled" Value="True"/>
+            <ui:Setter Property="Template">
+                <ui:Setter.Value>
+                    <ui:ControlTemplate TargetType="ui:Slider">
+                        <ui:Grid Margin="{ui:TemplateBinding Padding}">
+                            <ui:Grid.Resources>
+                                <ui:Style x:Key="SliderThumbStyle" TargetType="ui:Thumb">
+                                    <ui:Setter Property="BorderThickness" Value="0"/>
+                                    <ui:Setter Property="Background" Value="{ui:ThemeResource SliderThumbBackground}"/>
+                                    <ui:Setter Property="Template">
+                                        <ui:Setter.Value>
+                                            <ui:ControlTemplate TargetType="ui:Thumb">
+                                                <ui:Border BorderBrush="{ui:TemplateBinding BorderBrush}" BorderThickness="{ui:TemplateBinding BorderThickness}" Background="{ui:TemplateBinding Background}" CornerRadius="4"/>
+                                            </ui:ControlTemplate>
+                                        </ui:Setter.Value>
+                                    </ui:Setter>
+                                </ui:Style>
+                            </ui:Grid.Resources>
+                            <ui:Grid.RowDefinitions>
+                                <ui:RowDefinition Height="Auto"/>
+                                <ui:RowDefinition Height="*"/>
+                            </ui:Grid.RowDefinitions>
+                            <ui:VisualStateManager.VisualStateGroups>
+                                <ui:VisualStateGroup x:Name="CommonStates">
+                                    <ui:VisualState x:Name="Normal"/>
+                                    <ui:VisualState x:Name="Pressed">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Cyan"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Disabled">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="HeaderContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderHeaderForegroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Cyan"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="TopTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="BottomTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="LeftTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="RightTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="PointerOver">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Cyan"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                                <ui:VisualStateGroup x:Name="FocusEngagementStates">
+                                    <ui:VisualState x:Name="FocusDisengaged"/>
+                                    <ui:VisualState x:Name="FocusEngagedHorizontal">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="FocusEngagedVertical">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                            </ui:VisualStateManager.VisualStateGroups>
+                            <ui:ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{ui:TemplateBinding HeaderTemplate}" Content="{ui:TemplateBinding Header}" Foreground="{ui:ThemeResource SliderHeaderForeground}" FontWeight="{ui:ThemeResource SliderHeaderThemeFontWeight}" Margin="{ui:ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+                            <ui:Grid x:Name="SliderContainer" Background="{ui:ThemeResource SliderContainerBackground}" ui:Control.IsTemplateFocusTarget="True" ui:Grid.Row="1">
+                                <ui:Grid x:Name="HorizontalTemplate" MinHeight="44">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="*"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="18"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="18"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="HorizontalTrackRect" ui:Grid.ColumnSpan="3" Fill="{ui:TemplateBinding Background}" Height="4" ui:Grid.Row="1"/>
+                                    <ui:Rectangle x:Name="HorizontalDecreaseRect" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="1"/>
+                                    <ui:TickBar x:Name="TopTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,0,0,4" Visibility="Collapsed" VerticalAlignment="Bottom"/>
+                                    <ui:TickBar x:Name="HorizontalInlineTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderInlineTickBarFill}" Height="{ui:ThemeResource SliderTrackThemeHeight}" ui:Grid.Row="1" Visibility="Collapsed"/>
+                                    <ui:TickBar x:Name="BottomTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,4,0,0" ui:Grid.Row="2" Visibility="Collapsed" VerticalAlignment="Top"/>
+                                    <ui:Thumb x:Name="HorizontalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.Column="1" DataContext="{ui:TemplateBinding Value}" Height="24" ui:Grid.Row="0" ui:Grid.RowSpan="3" Style="{ui:StaticResource SliderThumbStyle}" Width="8"/>
+                                </ui:Grid>
+                                <ui:Grid x:Name="VerticalTemplate" MinWidth="44" Visibility="Collapsed">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="18"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="18"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="*"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="VerticalTrackRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Background}" ui:Grid.RowSpan="3" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:Rectangle x:Name="VerticalDecreaseRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="2"/>
+                                    <ui:TickBar x:Name="LeftTickBar" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Right" Margin="0,0,4,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:TickBar x:Name="VerticalInlineTickBar" ui:Grid.Column="1" Fill="{ui:ThemeResource SliderInlineTickBarFill}" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:TickBar x:Name="RightTickBar" ui:Grid.Column="2" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Left" Margin="4,0,0,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:Thumb x:Name="VerticalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.ColumnSpan="3" ui:Grid.Column="0" DataContext="{ui:TemplateBinding Value}" Height="8" ui:Grid.Row="1" Style="{ui:StaticResource SliderThumbStyle}" Width="24"/>
+                                </ui:Grid>
+                            </ui:Grid>
+                        </ui:Grid>
+                    </ui:ControlTemplate>
+                </ui:Setter.Value>
+            </ui:Setter>
+        </ui:Style>
+        <ui:Style x:Key="MSlider" TargetType="ui:Slider">
+            <ui:Setter Property="Background" Value="{ui:ThemeResource SliderTrackFill}"/>
+            <ui:Setter Property="BorderThickness" Value="{ui:ThemeResource SliderBorderThemeThickness}"/>
+            <ui:Setter Property="Foreground" Value="Magenta"/>
+            <ui:Setter Property="FontFamily" Value="{ui:ThemeResource ContentControlThemeFontFamily}"/>
+            <ui:Setter Property="FontSize" Value="{ui:ThemeResource ControlContentThemeFontSize}"/>
+            <ui:Setter Property="ManipulationMode" Value="None"/>
+            <ui:Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <ui:Setter Property="FocusVisualMargin" Value="-7,0,-7,0"/>
+            <ui:Setter Property="IsFocusEngagementEnabled" Value="True"/>
+            <ui:Setter Property="Template">
+                <ui:Setter.Value>
+                    <ui:ControlTemplate TargetType="ui:Slider">
+                        <ui:Grid Margin="{ui:TemplateBinding Padding}">
+                            <ui:Grid.Resources>
+                                <ui:Style x:Key="SliderThumbStyle" TargetType="ui:Thumb">
+                                    <ui:Setter Property="BorderThickness" Value="0"/>
+                                    <ui:Setter Property="Background" Value="{ui:ThemeResource SliderThumbBackground}"/>
+                                    <ui:Setter Property="Template">
+                                        <ui:Setter.Value>
+                                            <ui:ControlTemplate TargetType="ui:Thumb">
+                                                <ui:Border BorderBrush="{ui:TemplateBinding BorderBrush}" BorderThickness="{ui:TemplateBinding BorderThickness}" Background="{ui:TemplateBinding Background}" CornerRadius="4"/>
+                                            </ui:ControlTemplate>
+                                        </ui:Setter.Value>
+                                    </ui:Setter>
+                                </ui:Style>
+                            </ui:Grid.Resources>
+                            <ui:Grid.RowDefinitions>
+                                <ui:RowDefinition Height="Auto"/>
+                                <ui:RowDefinition Height="*"/>
+                            </ui:Grid.RowDefinitions>
+                            <ui:VisualStateManager.VisualStateGroups>
+                                <ui:VisualStateGroup x:Name="CommonStates">
+                                    <ui:VisualState x:Name="Normal"/>
+                                    <ui:VisualState x:Name="Pressed">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Magenta"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Disabled">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="HeaderContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderHeaderForegroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Magenta"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="TopTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="BottomTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="LeftTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="RightTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="PointerOver">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Magenta"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                                <ui:VisualStateGroup x:Name="FocusEngagementStates">
+                                    <ui:VisualState x:Name="FocusDisengaged"/>
+                                    <ui:VisualState x:Name="FocusEngagedHorizontal">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="FocusEngagedVertical">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                            </ui:VisualStateManager.VisualStateGroups>
+                            <ui:ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{ui:TemplateBinding HeaderTemplate}" Content="{ui:TemplateBinding Header}" Foreground="{ui:ThemeResource SliderHeaderForeground}" FontWeight="{ui:ThemeResource SliderHeaderThemeFontWeight}" Margin="{ui:ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+                            <ui:Grid x:Name="SliderContainer" Background="{ui:ThemeResource SliderContainerBackground}" ui:Control.IsTemplateFocusTarget="True" ui:Grid.Row="1">
+                                <ui:Grid x:Name="HorizontalTemplate" MinHeight="44">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="*"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="18"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="18"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="HorizontalTrackRect" ui:Grid.ColumnSpan="3" Fill="{ui:TemplateBinding Background}" Height="4" ui:Grid.Row="1"/>
+                                    <ui:Rectangle x:Name="HorizontalDecreaseRect" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="1"/>
+                                    <ui:TickBar x:Name="TopTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,0,0,4" Visibility="Collapsed" VerticalAlignment="Bottom"/>
+                                    <ui:TickBar x:Name="HorizontalInlineTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderInlineTickBarFill}" Height="{ui:ThemeResource SliderTrackThemeHeight}" ui:Grid.Row="1" Visibility="Collapsed"/>
+                                    <ui:TickBar x:Name="BottomTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,4,0,0" ui:Grid.Row="2" Visibility="Collapsed" VerticalAlignment="Top"/>
+                                    <ui:Thumb x:Name="HorizontalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.Column="1" DataContext="{ui:TemplateBinding Value}" Height="24" ui:Grid.Row="0" ui:Grid.RowSpan="3" Style="{ui:StaticResource SliderThumbStyle}" Width="8"/>
+                                </ui:Grid>
+                                <ui:Grid x:Name="VerticalTemplate" MinWidth="44" Visibility="Collapsed">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="18"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="18"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="*"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="VerticalTrackRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Background}" ui:Grid.RowSpan="3" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:Rectangle x:Name="VerticalDecreaseRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="2"/>
+                                    <ui:TickBar x:Name="LeftTickBar" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Right" Margin="0,0,4,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:TickBar x:Name="VerticalInlineTickBar" ui:Grid.Column="1" Fill="{ui:ThemeResource SliderInlineTickBarFill}" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:TickBar x:Name="RightTickBar" ui:Grid.Column="2" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Left" Margin="4,0,0,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:Thumb x:Name="VerticalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.ColumnSpan="3" ui:Grid.Column="0" DataContext="{ui:TemplateBinding Value}" Height="8" ui:Grid.Row="1" Style="{ui:StaticResource SliderThumbStyle}" Width="24"/>
+                                </ui:Grid>
+                            </ui:Grid>
+                        </ui:Grid>
+                    </ui:ControlTemplate>
+                </ui:Setter.Value>
+            </ui:Setter>
+        </ui:Style>
+        <ui:Style x:Key="YSlider" TargetType="ui:Slider">
+            <ui:Setter Property="Background" Value="{ui:ThemeResource SliderTrackFill}"/>
+            <ui:Setter Property="BorderThickness" Value="{ui:ThemeResource SliderBorderThemeThickness}"/>
+            <ui:Setter Property="Foreground" Value="Yellow"/>
+            <ui:Setter Property="FontFamily" Value="{ui:ThemeResource ContentControlThemeFontFamily}"/>
+            <ui:Setter Property="FontSize" Value="{ui:ThemeResource ControlContentThemeFontSize}"/>
+            <ui:Setter Property="ManipulationMode" Value="None"/>
+            <ui:Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <ui:Setter Property="FocusVisualMargin" Value="-7,0,-7,0"/>
+            <ui:Setter Property="IsFocusEngagementEnabled" Value="True"/>
+            <ui:Setter Property="Template">
+                <ui:Setter.Value>
+                    <ui:ControlTemplate TargetType="ui:Slider">
+                        <ui:Grid Margin="{ui:TemplateBinding Padding}">
+                            <ui:Grid.Resources>
+                                <ui:Style x:Key="SliderThumbStyle" TargetType="ui:Thumb">
+                                    <ui:Setter Property="BorderThickness" Value="0"/>
+                                    <ui:Setter Property="Background" Value="{ui:ThemeResource SliderThumbBackground}"/>
+                                    <ui:Setter Property="Template">
+                                        <ui:Setter.Value>
+                                            <ui:ControlTemplate TargetType="ui:Thumb">
+                                                <ui:Border BorderBrush="{ui:TemplateBinding BorderBrush}" BorderThickness="{ui:TemplateBinding BorderThickness}" Background="{ui:TemplateBinding Background}" CornerRadius="4"/>
+                                            </ui:ControlTemplate>
+                                        </ui:Setter.Value>
+                                    </ui:Setter>
+                                </ui:Style>
+                            </ui:Grid.Resources>
+                            <ui:Grid.RowDefinitions>
+                                <ui:RowDefinition Height="Auto"/>
+                                <ui:RowDefinition Height="*"/>
+                            </ui:Grid.RowDefinitions>
+                            <ui:VisualStateManager.VisualStateGroups>
+                                <ui:VisualStateGroup x:Name="CommonStates">
+                                    <ui:VisualState x:Name="Normal"/>
+                                    <ui:VisualState x:Name="Pressed">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Yellow"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Disabled">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="HeaderContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderHeaderForegroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Yellow"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="TopTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="BottomTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="LeftTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="RightTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="PointerOver">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Yellow"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                                <ui:VisualStateGroup x:Name="FocusEngagementStates">
+                                    <ui:VisualState x:Name="FocusDisengaged"/>
+                                    <ui:VisualState x:Name="FocusEngagedHorizontal">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="FocusEngagedVertical">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                            </ui:VisualStateManager.VisualStateGroups>
+                            <ui:ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{ui:TemplateBinding HeaderTemplate}" Content="{ui:TemplateBinding Header}" Foreground="{ui:ThemeResource SliderHeaderForeground}" FontWeight="{ui:ThemeResource SliderHeaderThemeFontWeight}" Margin="{ui:ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+                            <ui:Grid x:Name="SliderContainer" Background="{ui:ThemeResource SliderContainerBackground}" ui:Control.IsTemplateFocusTarget="True" ui:Grid.Row="1">
+                                <ui:Grid x:Name="HorizontalTemplate" MinHeight="44">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="*"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="18"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="18"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="HorizontalTrackRect" ui:Grid.ColumnSpan="3" Fill="{ui:TemplateBinding Background}" Height="4" ui:Grid.Row="1"/>
+                                    <ui:Rectangle x:Name="HorizontalDecreaseRect" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="1"/>
+                                    <ui:TickBar x:Name="TopTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,0,0,4" Visibility="Collapsed" VerticalAlignment="Bottom"/>
+                                    <ui:TickBar x:Name="HorizontalInlineTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderInlineTickBarFill}" Height="{ui:ThemeResource SliderTrackThemeHeight}" ui:Grid.Row="1" Visibility="Collapsed"/>
+                                    <ui:TickBar x:Name="BottomTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,4,0,0" ui:Grid.Row="2" Visibility="Collapsed" VerticalAlignment="Top"/>
+                                    <ui:Thumb x:Name="HorizontalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.Column="1" DataContext="{ui:TemplateBinding Value}" Height="24" ui:Grid.Row="0" ui:Grid.RowSpan="3" Style="{ui:StaticResource SliderThumbStyle}" Width="8"/>
+                                </ui:Grid>
+                                <ui:Grid x:Name="VerticalTemplate" MinWidth="44" Visibility="Collapsed">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="18"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="18"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="*"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="VerticalTrackRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Background}" ui:Grid.RowSpan="3" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:Rectangle x:Name="VerticalDecreaseRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="2"/>
+                                    <ui:TickBar x:Name="LeftTickBar" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Right" Margin="0,0,4,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:TickBar x:Name="VerticalInlineTickBar" ui:Grid.Column="1" Fill="{ui:ThemeResource SliderInlineTickBarFill}" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:TickBar x:Name="RightTickBar" ui:Grid.Column="2" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Left" Margin="4,0,0,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:Thumb x:Name="VerticalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.ColumnSpan="3" ui:Grid.Column="0" DataContext="{ui:TemplateBinding Value}" Height="8" ui:Grid.Row="1" Style="{ui:StaticResource SliderThumbStyle}" Width="24"/>
+                                </ui:Grid>
+                            </ui:Grid>
+                        </ui:Grid>
+                    </ui:ControlTemplate>
+                </ui:Setter.Value>
+            </ui:Setter>
+        </ui:Style>
+        <ui:Style x:Key="KSlider" TargetType="ui:Slider">
+            <ui:Setter Property="Background" Value="{ui:ThemeResource SliderTrackFill}"/>
+            <ui:Setter Property="BorderThickness" Value="{ui:ThemeResource SliderBorderThemeThickness}"/>
+            <ui:Setter Property="Foreground" Value="Black"/>
+            <ui:Setter Property="FontFamily" Value="{ui:ThemeResource ContentControlThemeFontFamily}"/>
+            <ui:Setter Property="FontSize" Value="{ui:ThemeResource ControlContentThemeFontSize}"/>
+            <ui:Setter Property="ManipulationMode" Value="None"/>
+            <ui:Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <ui:Setter Property="FocusVisualMargin" Value="-7,0,-7,0"/>
+            <ui:Setter Property="IsFocusEngagementEnabled" Value="True"/>
+            <ui:Setter Property="Template">
+                <ui:Setter.Value>
+                    <ui:ControlTemplate TargetType="ui:Slider">
+                        <ui:Grid Margin="{ui:TemplateBinding Padding}">
+                            <ui:Grid.Resources>
+                                <ui:Style x:Key="SliderThumbStyle" TargetType="ui:Thumb">
+                                    <ui:Setter Property="BorderThickness" Value="0"/>
+                                    <ui:Setter Property="Background" Value="{ui:ThemeResource SliderThumbBackground}"/>
+                                    <ui:Setter Property="Template">
+                                        <ui:Setter.Value>
+                                            <ui:ControlTemplate TargetType="ui:Thumb">
+                                                <ui:Border BorderBrush="{ui:TemplateBinding BorderBrush}" BorderThickness="{ui:TemplateBinding BorderThickness}" Background="{ui:TemplateBinding Background}" CornerRadius="4"/>
+                                            </ui:ControlTemplate>
+                                        </ui:Setter.Value>
+                                    </ui:Setter>
+                                </ui:Style>
+                            </ui:Grid.Resources>
+                            <ui:Grid.RowDefinitions>
+                                <ui:RowDefinition Height="Auto"/>
+                                <ui:RowDefinition Height="*"/>
+                            </ui:Grid.RowDefinitions>
+                            <ui:VisualStateManager.VisualStateGroups>
+                                <ui:VisualStateGroup x:Name="CommonStates">
+                                    <ui:VisualState x:Name="Normal"/>
+                                    <ui:VisualState x:Name="Pressed">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPressed}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Disabled">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="HeaderContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderHeaderForegroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="TopTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="BottomTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="LeftTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="RightTickBar">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTickBarFillDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="PointerOver">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalTrackRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderThumbBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderContainerBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="HorizontalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Fill" ui:Storyboard.TargetName="VerticalDecreaseRect">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource SliderTrackValueFillPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                                <ui:VisualStateGroup x:Name="FocusEngagementStates">
+                                    <ui:VisualState x:Name="FocusDisengaged"/>
+                                    <ui:VisualState x:Name="FocusEngagedHorizontal">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="HorizontalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="FocusEngagedVertical">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="SliderContainer">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="False"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="(Control.IsTemplateFocusTarget)" ui:Storyboard.TargetName="VerticalThumb">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                            </ui:VisualStateManager.VisualStateGroups>
+                            <ui:ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{ui:TemplateBinding HeaderTemplate}" Content="{ui:TemplateBinding Header}" Foreground="{ui:ThemeResource SliderHeaderForeground}" FontWeight="{ui:ThemeResource SliderHeaderThemeFontWeight}" Margin="{ui:ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+                            <ui:Grid x:Name="SliderContainer" Background="{ui:ThemeResource SliderContainerBackground}" ui:Control.IsTemplateFocusTarget="True" ui:Grid.Row="1">
+                                <ui:Grid x:Name="HorizontalTemplate" MinHeight="44">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="*"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="18"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="18"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="HorizontalTrackRect" ui:Grid.ColumnSpan="3" Fill="{ui:TemplateBinding Background}" Height="4" ui:Grid.Row="1"/>
+                                    <ui:Rectangle x:Name="HorizontalDecreaseRect" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="1"/>
+                                    <ui:TickBar x:Name="TopTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,0,0,4" Visibility="Collapsed" VerticalAlignment="Bottom"/>
+                                    <ui:TickBar x:Name="HorizontalInlineTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderInlineTickBarFill}" Height="{ui:ThemeResource SliderTrackThemeHeight}" ui:Grid.Row="1" Visibility="Collapsed"/>
+                                    <ui:TickBar x:Name="BottomTickBar" ui:Grid.ColumnSpan="3" Fill="{ui:ThemeResource SliderTickBarFill}" Height="{ui:ThemeResource SliderOutsideTickBarThemeHeight}" Margin="0,4,0,0" ui:Grid.Row="2" Visibility="Collapsed" VerticalAlignment="Top"/>
+                                    <ui:Thumb x:Name="HorizontalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.Column="1" DataContext="{ui:TemplateBinding Value}" Height="24" ui:Grid.Row="0" ui:Grid.RowSpan="3" Style="{ui:StaticResource SliderThumbStyle}" Width="8"/>
+                                </ui:Grid>
+                                <ui:Grid x:Name="VerticalTemplate" MinWidth="44" Visibility="Collapsed">
+                                    <ui:Grid.ColumnDefinitions>
+                                        <ui:ColumnDefinition Width="18"/>
+                                        <ui:ColumnDefinition Width="Auto"/>
+                                        <ui:ColumnDefinition Width="18"/>
+                                    </ui:Grid.ColumnDefinitions>
+                                    <ui:Grid.RowDefinitions>
+                                        <ui:RowDefinition Height="*"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                        <ui:RowDefinition Height="Auto"/>
+                                    </ui:Grid.RowDefinitions>
+                                    <ui:Rectangle x:Name="VerticalTrackRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Background}" ui:Grid.RowSpan="3" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:Rectangle x:Name="VerticalDecreaseRect" ui:Grid.Column="1" Fill="{ui:TemplateBinding Foreground}" ui:Grid.Row="2"/>
+                                    <ui:TickBar x:Name="LeftTickBar" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Right" Margin="0,0,4,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:TickBar x:Name="VerticalInlineTickBar" ui:Grid.Column="1" Fill="{ui:ThemeResource SliderInlineTickBarFill}" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderTrackThemeHeight}"/>
+                                    <ui:TickBar x:Name="RightTickBar" ui:Grid.Column="2" Fill="{ui:ThemeResource SliderTickBarFill}" HorizontalAlignment="Left" Margin="4,0,0,0" ui:Grid.RowSpan="3" Visibility="Collapsed" Width="{ui:ThemeResource SliderOutsideTickBarThemeHeight}"/>
+                                    <ui:Thumb x:Name="VerticalThumb" ui:AutomationProperties.AccessibilityView="Raw" ui:Grid.ColumnSpan="3" ui:Grid.Column="0" DataContext="{ui:TemplateBinding Value}" Height="8" ui:Grid.Row="1" Style="{ui:StaticResource SliderThumbStyle}" Width="24"/>
+                                </ui:Grid>
+                            </ui:Grid>
+                        </ui:Grid>
+                    </ui:ControlTemplate>
+                </ui:Setter.Value>
+            </ui:Setter>
+        </ui:Style>
+        <ui:Style x:Key="MyTextBoxDisable" TargetType="ui:TextBox">
+            <ui:Setter Property="MinWidth" Value="80"/>
+            <ui:Setter Property="MinHeight" Value="{ui:ThemeResource TextControlThemeMinHeight}"/>
+            <ui:Setter Property="Foreground" Value="Black"/>
+            <ui:Setter Property="Background" Value="White"/>
+            <ui:Setter Property="BorderBrush" Value="{ui:ThemeResource TextControlBorderBrush}"/>
+            <ui:Setter Property="SelectionHighlightColor" Value="{ui:ThemeResource TextControlSelectionHighlightColor}"/>
+            <ui:Setter Property="BorderThickness" Value="{ui:ThemeResource TextControlBorderThemeThickness}"/>
+            <ui:Setter Property="FontFamily" Value="{ui:ThemeResource ContentControlThemeFontFamily}"/>
+            <ui:Setter Property="FontSize" Value="16"/>
+            <ui:Setter Property="ui:ScrollViewer.HorizontalScrollMode" Value="Auto"/>
+            <ui:Setter Property="ui:ScrollViewer.VerticalScrollMode" Value="Auto"/>
+            <ui:Setter Property="ui:ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+            <ui:Setter Property="ui:ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
+            <ui:Setter Property="ui:ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
+            <ui:Setter Property="Padding" Value="{ui:ThemeResource TextControlThemePadding}"/>
+            <!--<ui:Setter Property="VerticalAlignment" Value="Center"/>
+            <ui:Setter Property="HorizontalAlignment" Value="Center"/>-->
+            <ui:Setter Property="Template">
+                <ui:Setter.Value>
+                    <ui:ControlTemplate TargetType="ui:TextBox">
+                        <ui:Grid>
+                            <ui:Grid.Resources>
+                                <ui:Style x:Name="DeleteButtonStyle" TargetType="ui:Button">
+                                    <ui:Setter Property="Template">
+                                        <ui:Setter.Value>
+                                            <ui:ControlTemplate TargetType="ui:Button">
+                                                <ui:Grid x:Name="ButtonLayoutGrid" BorderBrush="Black" BorderThickness="{ui:TemplateBinding BorderThickness}" Background="{ui:ThemeResource TextControlButtonBackground}">
+                                                    <ui:VisualStateManager.VisualStateGroups>
+                                                        <ui:VisualStateGroup x:Name="CommonStates">
+                                                            <ui:VisualState x:Name="Normal"/>
+                                                            <ui:VisualState x:Name="PointerOver">
+                                                                <ui:Storyboard>
+                                                                    <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="ButtonLayoutGrid">
+                                                                        <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                                                    </ui:ObjectAnimationUsingKeyFrames>
+                                                                    <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="BorderBrush" ui:Storyboard.TargetName="ButtonLayoutGrid">
+                                                                        <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlButtonBorderBrushPointerOver}"/>
+                                                                    </ui:ObjectAnimationUsingKeyFrames>
+                                                                    <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="GlyphElement">
+                                                                        <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                                                    </ui:ObjectAnimationUsingKeyFrames>
+                                                                </ui:Storyboard>
+                                                            </ui:VisualState>
+                                                            <ui:VisualState x:Name="Pressed">
+                                                                <ui:Storyboard>
+                                                                    <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="ButtonLayoutGrid">
+                                                                        <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlButtonBackgroundPressed}"/>
+                                                                    </ui:ObjectAnimationUsingKeyFrames>
+                                                                    <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="BorderBrush" ui:Storyboard.TargetName="ButtonLayoutGrid">
+                                                                        <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlButtonBorderBrushPressed}"/>
+                                                                    </ui:ObjectAnimationUsingKeyFrames>
+                                                                    <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="GlyphElement">
+                                                                        <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlButtonForegroundPressed}"/>
+                                                                    </ui:ObjectAnimationUsingKeyFrames>
+                                                                </ui:Storyboard>
+                                                            </ui:VisualState>
+                                                            <ui:VisualState x:Name="Disabled">
+                                                                <ui:Storyboard>
+                                                                    <ui:DoubleAnimation Duration="0" To="0" ui:Storyboard.TargetProperty="Opacity" ui:Storyboard.TargetName="ButtonLayoutGrid"/>
+                                                                </ui:Storyboard>
+                                                            </ui:VisualState>
+                                                        </ui:VisualStateGroup>
+                                                    </ui:VisualStateManager.VisualStateGroups>
+                                                    <ui:TextBlock x:Name="GlyphElement" ui:AutomationProperties.AccessibilityView="Raw" Foreground="{ui:ThemeResource TextControlButtonForeground}" FontStyle="Normal" FontSize="12" FontFamily="{ui:ThemeResource SymbolThemeFontFamily}" HorizontalAlignment="Center" Text="&#xE10A;" VerticalAlignment="Center"/>
+                                                </ui:Grid>
+                                            </ui:ControlTemplate>
+                                        </ui:Setter.Value>
+                                    </ui:Setter>
+                                </ui:Style>
+                            </ui:Grid.Resources>
+                            <ui:Grid.ColumnDefinitions>
+                                <ui:ColumnDefinition Width="*"/>
+                                <ui:ColumnDefinition Width="Auto"/>
+                            </ui:Grid.ColumnDefinitions>
+                            <ui:Grid.RowDefinitions>
+                                <ui:RowDefinition Height="Auto"/>
+                                <ui:RowDefinition Height="*"/>
+                            </ui:Grid.RowDefinitions>
+                            <ui:VisualStateManager.VisualStateGroups>
+                                <ui:VisualStateGroup x:Name="CommonStates">
+                                    <ui:VisualState x:Name="Disabled">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="HeaderContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlHeaderForegroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="BorderElement">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="BorderBrush" ui:Storyboard.TargetName="BorderElement">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlBorderBrushDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentElement">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="PlaceholderTextContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlPlaceholderForegroundDisabled}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Normal"/>
+                                    <ui:VisualState x:Name="PointerOver">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="BorderBrush" ui:Storyboard.TargetName="BorderElement">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlBorderBrushPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="BorderElement">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlBackgroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="PlaceholderTextContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlPlaceholderForegroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentElement">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlForegroundPointerOver}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="Focused">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="PlaceholderTextContentPresenter">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlPlaceholderForegroundFocused}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Background" ui:Storyboard.TargetName="BorderElement">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlBackgroundFocused}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="BorderBrush" ui:Storyboard.TargetName="BorderElement">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlBorderBrushFocused}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Foreground" ui:Storyboard.TargetName="ContentElement">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="{ui:ThemeResource TextControlForegroundFocused}"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="RequestedTheme" ui:Storyboard.TargetName="ContentElement">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0" Value="Light"/>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                </ui:VisualStateGroup>
+                                <ui:VisualStateGroup x:Name="ButtonStates">
+                                    <ui:VisualState x:Name="ButtonVisible">
+                                        <ui:Storyboard>
+                                            <ui:ObjectAnimationUsingKeyFrames ui:Storyboard.TargetProperty="Visibility" ui:Storyboard.TargetName="DeleteButton">
+                                                <ui:DiscreteObjectKeyFrame KeyTime="0">
+                                                    <ui:DiscreteObjectKeyFrame.Value>
+                                                        <ui:Visibility>Visible</ui:Visibility>
+                                                    </ui:DiscreteObjectKeyFrame.Value>
+                                                </ui:DiscreteObjectKeyFrame>
+                                            </ui:ObjectAnimationUsingKeyFrames>
+                                        </ui:Storyboard>
+                                    </ui:VisualState>
+                                    <ui:VisualState x:Name="ButtonCollapsed"/>
+                                </ui:VisualStateGroup>
+                            </ui:VisualStateManager.VisualStateGroups>
+                            <ui:Border x:Name="BorderElement" BorderBrush="{ui:TemplateBinding BorderBrush}" BorderThickness="{ui:TemplateBinding BorderThickness}" Background="{ui:TemplateBinding Background}" ui:Grid.ColumnSpan="2" ui:Grid.Row="1" ui:Grid.RowSpan="1"/>
+                            <ui:ContentPresenter x:Name="HeaderContentPresenter" ui:Grid.ColumnSpan="2" ContentTemplate="{ui:TemplateBinding HeaderTemplate}" Content="{ui:TemplateBinding Header}" Foreground="{ui:ThemeResource TextControlHeaderForeground}" FontWeight="Normal" Margin="0,0,0,8" ui:Grid.Row="0" TextWrapping="{ui:TemplateBinding TextWrapping}" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
+                            <ui:ScrollViewer x:Name="ContentElement" ui:AutomationProperties.AccessibilityView="Raw" HorizontalScrollMode="{ui:TemplateBinding ui:ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{ui:TemplateBinding ui:ScrollViewer.HorizontalScrollBarVisibility}" IsTabStop="False" IsHorizontalRailEnabled="{ui:TemplateBinding ui:ScrollViewer.IsHorizontalRailEnabled}" IsVerticalRailEnabled="{ui:TemplateBinding ui:ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{ui:TemplateBinding ui:ScrollViewer.IsDeferredScrollingEnabled}" Margin="{ui:TemplateBinding BorderThickness}" Padding="{ui:TemplateBinding Padding}" ui:Grid.Row="1" VerticalScrollBarVisibility="{ui:TemplateBinding ui:ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{ui:TemplateBinding ui:ScrollViewer.VerticalScrollMode}" ZoomMode="Disabled"/>
+                            <ui:ContentPresenter x:Name="PlaceholderTextContentPresenter" ui:Grid.ColumnSpan="2" Content="{ui:TemplateBinding PlaceholderText}" Foreground="{ui:ThemeResource TextControlPlaceholderForeground}" IsHitTestVisible="False" Margin="{ui:TemplateBinding BorderThickness}" Padding="{ui:TemplateBinding Padding}" ui:Grid.Row="1" TextWrapping="{ui:TemplateBinding TextWrapping}"/>
+                            <ui:Button x:Name="DeleteButton" ui:AutomationProperties.AccessibilityView="Raw" BorderThickness="{ui:TemplateBinding BorderThickness}" ui:Grid.Column="1" FontSize="{ui:TemplateBinding FontSize}" IsTabStop="False" Margin="{ui:ThemeResource HelperButtonThemePadding}" MinWidth="34" ui:Grid.Row="1" Style="{ui:StaticResource DeleteButtonStyle}" Visibility="Collapsed" VerticalAlignment="Stretch"/>
+                        </ui:Grid>
+                    </ui:ControlTemplate>
+                </ui:Setter.Value>
+            </ui:Setter>
+        </ui:Style>
     </ui:Page.Resources>
 
     <Grid Background="Black">
@@ -205,6 +1720,11 @@
                     <TextBlock Name="Title" Text="MyPaint" FontSize="26" Margin="20,0,20,0" VerticalAlignment="Center" Width="200" Foreground="#eee61a"/>
 
                     <TextBlock Text="|" Margin="20,0,20,0" FontSize="30" FontWeight="ExtraLight" />
+
+                    <Button Name="ColorButton"  ToolTipService.ToolTip="Change color" ToolTipService.Placement="Bottom"
+                            Width="30" Height="30" Click="ColorButton_Click" Background="White"/>
+
+
                     <ListBox Name="SelectShapeListBox" SelectionMode="Single" SelectionChanged="SelectMenuListBox_SelectionChanged" Width="200" Height="50" Background="#474747" Margin="20,0,20,0" ItemContainerStyle="{ui:StaticResource MyStyleOfListBox}">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -224,6 +1744,7 @@
                             <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEA3A;" FontSize="20" HorizontalAlignment="Center"/>
                         </ListBoxItem>
                     </ListBox>
+
                     <TextBlock Text="|" Margin="20,0,20,0" FontSize="30" FontWeight="ExtraLight" />
 
                     <StackPanel Orientation="Horizontal">
@@ -263,13 +1784,61 @@
 
 
         <Grid Grid.Row="1">
+
+
             <ScrollViewer ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="20"
                           HorizontalScrollBarVisibility="Visible" VerticalAlignment="Stretch" 
                           HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Visible" 
                           Height="auto" Width="1366">
                 <Border Height="4000" Width="8000">
                     <Canvas Name="MyCanvas"  Background="#fff72b" Height="4000" Width="8000"
-                        AllowDrop="True" DragOver="Shape_DragOver" Drop="Shape_Drop">
+                        AllowDrop="True" DragOver="Shape_DragOver" Drop="Shape_Drop" Margin="33,-10,-33,10">
+                        <Popup Name="ColorPickerPopup" IsOpen="False">
+                            <StackPanel Background="DarkGray" Margin="5,15,0,0" Orientation="Vertical">
+                                <Controls:ColorPicker x:Name="ColorPicker" Height="258" Width="374" Margin="5, 5, 5, 15"
+                                                      ColorChanged="Colorpick_ColorChanged" Visibility="Visible"/>
+                                <StackPanel Orientation="Vertical" Margin="9,0,5,25" >
+                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                                        <TextBlock x:Name="RTextBlock" Text="R" Width="30" TextWrapping="Wrap" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="RTextBox" Height="32" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                                        <Slider x:Name="RSlider" Width="200" Maximum="255" Minimum="0" VerticalAlignment="Center" ValueChanged="SliderRGB_ValueChanged" Style="{ui:StaticResource RSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                                        <TextBlock x:Name="GTextBlock" Text="G" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="GTextBox" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                                        <Slider x:Name="GSlider" Width="200" Maximum="255" Minimum="0" VerticalAlignment="Center" ValueChanged="SliderRGB_ValueChanged" Style="{ui:StaticResource GSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                                        <TextBlock x:Name="BTextBlock" Text="B" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="BTextBox" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False"  Style="{ui:StaticResource MyTextBoxDisable}"/>
+                                        <Slider x:Name="BSlider" Width="200" Maximum="255" Minimum="0" VerticalAlignment="Center" ValueChanged="SliderRGB_ValueChanged" Style="{ui:StaticResource BSlider}"/>
+                                    </StackPanel>
+
+                                    <Border BorderBrush="Gray" BorderThickness="1" Width="292" Margin="5,15" HorizontalAlignment="Left"/>
+
+                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                                        <TextBlock x:Name="CTextBlock" Text="C" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="CTextBox"  FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                                        <Slider x:Name="CSlider" Width="200" Maximum="1" Minimum="0" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource CSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                                        <TextBlock x:Name="MTextBlock" Text="M" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="MTextBox" FontSize="16"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"  IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                                        <Slider x:Name="MSlider" Width="200" Maximum="1" Minimum="0" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource MSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                                        <TextBlock x:Name="YTextBlock" Text="Y" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="YTextBox" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                                        <Slider x:Name="YSlider" Width="200" Maximum="1" Minimum="0" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource YSlider}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
+                                        <TextBlock x:Name="KTextBlock" Text="K" Width="30" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="KTextBox" FontSize="16" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                                        <Slider x:Name="KSlider" Width="200" Maximum="1.00" Minimum="0.00" StepFrequency="0.0001" VerticalAlignment="Center" ValueChanged="SliderCMYK_ValueChanged" Style="{ui:StaticResource KSlider}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Popup>
                     </Canvas>
                 </Border>
             </ScrollViewer>
