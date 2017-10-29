@@ -14,6 +14,7 @@
     Height="696"
     Background="Black"
     Foreground="White">
+
     <ui:Page.Resources>
         <ui:Style x:Key="MyStyleOfListBox" TargetType="ui:ListBoxItem">
             <ui:Setter Property="Background" Value="Transparent"/>
@@ -1820,7 +1821,7 @@
                 <StackPanel Background="DarkGray" Margin="5,5,0,0" Orientation="Vertical">
                     <Controls:ColorPicker x:Name="ColorPicker" Height="258" Width="374" Margin="5, 5, 5, 15"
                                                       ColorChanged="Colorpick_ColorChanged" Visibility="Visible"/>
-                    <StackPanel Orientation="Vertical" Margin="9,0,5,15" >
+                    <StackPanel Orientation="Vertical" Margin="9,0,5,5" >
                         <StackPanel Orientation="Horizontal" Width="369" VerticalAlignment="Center">
                             <TextBlock x:Name="RTextBlock" Text="R" Width="30" TextWrapping="Wrap" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBox x:Name="RTextBox" Height="32" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
@@ -1862,6 +1863,7 @@
                     </StackPanel>
                 </StackPanel>
             </Popup>
+            
 
             <ScrollViewer ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="20"
                           HorizontalScrollBarVisibility="Visible" VerticalAlignment="Stretch" 
