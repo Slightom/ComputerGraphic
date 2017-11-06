@@ -484,12 +484,7 @@ namespace ComputerGraphic
 
         private void Shape_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Hand, 0);
-
-            if (sender is Line) { selectedElement = MyCanvas.Children.OfType<Line>().Where(x => x.Name == (sender as Line).Name).FirstOrDefault(); }
-            else if (sender is Rectangle) { selectedElement = MyCanvas.Children.OfType<Rectangle>().Where(x => x.Name == (sender as Rectangle).Name).FirstOrDefault(); }
-            else { selectedElement = MyCanvas.Children.OfType<Ellipse>().Where(x => x.Name == (sender as Ellipse).Name).FirstOrDefault(); }
-
+            Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Hand, 0);           
         }
 
         private void Shape_PointerExited(object sender, PointerRoutedEventArgs e)
@@ -499,32 +494,50 @@ namespace ComputerGraphic
 
         private void Shape_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if (selectedElement is Line)
-            {
-                selectedElement = MyCanvas.Children.OfType<Line>().Where(x => x.Name == (selectedElement as Line).Name).FirstOrDefault();
-                var line = (selectedElement as Line);
-                X1TextBox.Text = line.X1.ToString();
-                X2TextBox.Text = line.X2.ToString();
-                Y1TextBox.Text = line.Y1.ToString();
-                Y2TextBox.Text = line.Y2.ToString();
+            selectedElement = null;
+            selectedImage = null;
+            if (sender is Line) { selectedElement = MyCanvas.Children.OfType<Line>().Where(x => x.Name == (sender as Line).Name).FirstOrDefault(); }
+            else if (sender is Rectangle) { selectedElement = MyCanvas.Children.OfType<Rectangle>().Where(x => x.Name == (sender as Rectangle).Name).FirstOrDefault(); }
+            else if (sender is Ellipse){ selectedElement = MyCanvas.Children.OfType<Ellipse>().Where(x => x.Name == (sender as Ellipse).Name).FirstOrDefault(); }
+            else { selectedImage = sender as Image; }
 
-            }
-            else if (selectedElement is Rectangle)
+            if(selectedImage != null)
             {
-                selectedElement = MyCanvas.Children.OfType<Rectangle>().Where(x => x.Name == (selectedElement as Rectangle).Name).FirstOrDefault();
-                X1TextBox.Text = Canvas.GetLeft(selectedElement).ToString();
-                X2TextBox.Text = (Canvas.GetLeft(selectedElement) + selectedElement.Width).ToString();
-                Y1TextBox.Text = Canvas.GetTop(selectedElement).ToString();
-                Y2TextBox.Text = (Canvas.GetTop(selectedElement) + selectedElement.Height).ToString();
+                X1TextBox.Text = Canvas.GetLeft(selectedImage).ToString();
+                X2TextBox.Text = (Canvas.GetLeft(selectedImage) + selectedImage.Width).ToString();
+                Y1TextBox.Text = Canvas.GetTop(selectedImage).ToString();
+                Y2TextBox.Text = (Canvas.GetTop(selectedImage) + selectedImage.Height).ToString();
             }
             else
             {
-                selectedElement = MyCanvas.Children.OfType<Ellipse>().Where(x => x.Name == (selectedElement as Ellipse).Name).FirstOrDefault();
-                X1TextBox.Text = Canvas.GetLeft(selectedElement).ToString();
-                X2TextBox.Text = (Canvas.GetLeft(selectedElement) + selectedElement.Width).ToString();
-                Y1TextBox.Text = Canvas.GetTop(selectedElement).ToString();
-                Y2TextBox.Text = (Canvas.GetTop(selectedElement) + selectedElement.Height).ToString();
+                if (selectedElement is Line)
+                {
+                    selectedElement = MyCanvas.Children.OfType<Line>().Where(x => x.Name == (selectedElement as Line).Name).FirstOrDefault();
+                    var line = (selectedElement as Line);
+                    X1TextBox.Text = line.X1.ToString();
+                    X2TextBox.Text = line.X2.ToString();
+                    Y1TextBox.Text = line.Y1.ToString();
+                    Y2TextBox.Text = line.Y2.ToString();
+
+                }
+                else if (selectedElement is Rectangle)
+                {
+                    selectedElement = MyCanvas.Children.OfType<Rectangle>().Where(x => x.Name == (selectedElement as Rectangle).Name).FirstOrDefault();
+                    X1TextBox.Text = Canvas.GetLeft(selectedElement).ToString();
+                    X2TextBox.Text = (Canvas.GetLeft(selectedElement) + selectedElement.Width).ToString();
+                    Y1TextBox.Text = Canvas.GetTop(selectedElement).ToString();
+                    Y2TextBox.Text = (Canvas.GetTop(selectedElement) + selectedElement.Height).ToString();
+                }
+                else
+                {
+                    selectedElement = MyCanvas.Children.OfType<Ellipse>().Where(x => x.Name == (selectedElement as Ellipse).Name).FirstOrDefault();
+                    X1TextBox.Text = Canvas.GetLeft(selectedElement).ToString();
+                    X2TextBox.Text = (Canvas.GetLeft(selectedElement) + selectedElement.Width).ToString();
+                    Y1TextBox.Text = Canvas.GetTop(selectedElement).ToString();
+                    Y2TextBox.Text = (Canvas.GetTop(selectedElement) + selectedElement.Height).ToString();
+                }
             }
+            
         }
         #endregion
 
@@ -569,6 +582,8 @@ namespace ComputerGraphic
 
         #endregion
 
+
+
         #region PPM Files
 
         private async void LoadFileClickAsync(object sender, RoutedEventArgs e)
@@ -605,10 +620,12 @@ namespace ComputerGraphic
             bitmap.SetSource(stream);
             Image Image = new Image();
             Image.Source = bitmap;
-            Image.DragStarting += Shape_DragStarting;
+            Image.DragStarting += Shape_DragStarting;           
             Image.CanDrag = true;
             Image.Name = "i" + MyCanvas.Children.Count().ToString();
             MyCanvas.Children.Add(Image);
+            Image.PointerPressed += Shape_PointerPressed;
+            selectedImage = Image;
         }
 
         private async Task ReadPPM(StorageFile file)
@@ -646,6 +663,7 @@ namespace ComputerGraphic
             using (Stream bitmapStream = bitmap.PixelBuffer.AsStream())
             {
                 await bitmapStream.WriteAsync(array, 0, array.Length);
+                //await bitmapStream.WriteAsync()
             }
 
             Image Image = new Image();
@@ -656,6 +674,8 @@ namespace ComputerGraphic
             Image.CanDrag = true;
             Image.Name = "i" + MyCanvas.Children.Count().ToString();
             MyCanvas.Children.Add(Image);
+            Image.PointerPressed += Shape_PointerPressed;
+            selectedImage = Image;
         }
 
         private byte[] ReadP3(int width, int height, int max, int[] numbers)
@@ -665,9 +685,9 @@ namespace ComputerGraphic
             {
                 for (int i = 0, j = 0; i < array.Length; i += 4, j += 3)
                 {
-                    array[i] = (byte)(numbers[j] * 255 / max);
-                    array[i + 1] = (byte)((numbers[j + 2]) * 255 / max);
-                    array[i + 2] = (byte)((numbers[j + 1]) * 255 / max);
+                    array[i] = (byte)(numbers[j +2] * 255 / max);
+                    array[i + 1] = (byte)((numbers[j + 1]) * 255 / max);
+                    array[i + 2] = (byte)((numbers[j]) * 255 / max);
                     array[i + 3] = (byte)255;
                 }
             }
@@ -689,7 +709,7 @@ namespace ComputerGraphic
             while (!reader.EndOfStream)
             {
                 line = reader.ReadLine();
-                line = line.Replace("\t", "");
+                line = line.Replace("\t", " ");
                 words = line.Split(' ');
                 foreach (var word in words)
                 {
@@ -788,6 +808,8 @@ namespace ComputerGraphic
             Image.CanDrag = true;
             Image.Name = "i" + MyCanvas.Children.Count().ToString();
             MyCanvas.Children.Add(Image);
+            Image.PointerPressed += Shape_PointerPressed;
+            selectedImage = Image;
         }
 
         private byte[] Read8bit(BinaryReader reader, int width, int height, int max)
@@ -859,6 +881,8 @@ namespace ComputerGraphic
 
 
         #endregion
+
+
 
         #region ColorPicker
 
@@ -986,9 +1010,9 @@ namespace ComputerGraphic
 
         private Color setLighterColor(Color color)
         {
-            int r = Convert.ToInt32(color.R) + 10;
-            int g = Convert.ToInt32(color.G) + 10;
-            int b = Convert.ToInt32(color.B) + 10;
+            int r = Convert.ToInt32(color.R) + 17;
+            int g = Convert.ToInt32(color.G) + 17;
+            int b = Convert.ToInt32(color.B) + 17;
 
             if (r > 255) { r = 255; }
             if (g > 255) { g = 255; }
@@ -1012,6 +1036,62 @@ namespace ComputerGraphic
             titleBar.ButtonBackgroundColor = Colors.Black;
             titleBar.ButtonForegroundColor = Colors.White;
         }
+
+        private void ColorButton_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            ColorButton.Background = new SolidColorBrush(colorLighter);
+        }
+
+        private void ColorButton_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            ColorButton.Background = new SolidColorBrush(color);
+        }
+
+        #endregion
+
+
+        #region Transformations and FIltrs
+
+        private void AddingSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            int sliderValue = (int)AddingSlider.Value;
+            AddTextBox.Text = AddingSlider.Value.ToString();
+
+            if (selectedImage != null)
+            {
+                WriteableBitmap wbitmap = selectedImage.Source as WriteableBitmap;
+                byte[] myByte;
+                using (Stream stream = wbitmap.PixelBuffer.AsStream())
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    stream.CopyTo(memoryStream);
+                    myByte = memoryStream.ToArray();
+                }
+
+                for (int i = 0; i < myByte.Length; i += 4)
+                {
+                    myByte[i] += (byte)sliderValue;
+                    myByte[i + 1] += (byte)sliderValue;
+                    myByte[i + 2] += (byte)sliderValue;
+                }
+
+                using (Stream stream = wbitmap.PixelBuffer.AsStream())
+                {
+                    stream.Write(myByte, 0, myByte.Length);
+                }
+                selectedImage.Source = wbitmap;
+            }
+        }
+
+        private void MultiplySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            MultiplyTextBox.Text = MultiplyingSlider.Value.ToString();
+        }
+
+        
+
+
+
         #endregion
     }
 }
