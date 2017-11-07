@@ -507,6 +507,8 @@ namespace ComputerGraphic
                 X2TextBox.Text = (Canvas.GetLeft(selectedImage) + selectedImage.Width).ToString();
                 Y1TextBox.Text = Canvas.GetTop(selectedImage).ToString();
                 Y2TextBox.Text = (Canvas.GetTop(selectedImage) + selectedImage.Height).ToString();
+
+                setImageResources();
             }
             else
             {
@@ -626,6 +628,7 @@ namespace ComputerGraphic
             MyCanvas.Children.Add(Image);
             Image.PointerPressed += Shape_PointerPressed;
             selectedImage = Image;
+            setImageResources();
         }
 
         private async Task ReadPPM(StorageFile file)
@@ -676,6 +679,7 @@ namespace ComputerGraphic
             MyCanvas.Children.Add(Image);
             Image.PointerPressed += Shape_PointerPressed;
             selectedImage = Image;
+            setImageResources();
         }
 
         private byte[] ReadP3(int width, int height, int max, int[] numbers)
@@ -810,6 +814,7 @@ namespace ComputerGraphic
             MyCanvas.Children.Add(Image);
             Image.PointerPressed += Shape_PointerPressed;
             selectedImage = Image;
+            setImageResources();
         }
 
         private byte[] Read8bit(BinaryReader reader, int width, int height, int max)
@@ -1050,46 +1055,121 @@ namespace ComputerGraphic
         #endregion
 
 
-        #region Transformations and FIltrs
+        #region Transformations and Filtrs
+
+        private byte[] originalArray;
+        private int bitmapHeight, bitmapWidth;
+        private bool changedFromSlider = false;
 
         private void AddingSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
+            changedFromSlider = true;
             int sliderValue = (int)AddingSlider.Value;
+            int new1, new2, new3;
             AddTextBox.Text = AddingSlider.Value.ToString();
 
+            byte[] tempArray = new byte[originalArray.Length];
             if (selectedImage != null)
             {
-                WriteableBitmap wbitmap = selectedImage.Source as WriteableBitmap;
-                byte[] myByte;
-                using (Stream stream = wbitmap.PixelBuffer.AsStream())
-                using (MemoryStream memoryStream = new MemoryStream())
+                for (int i = 0; i < originalArray.Length; i += 4)
                 {
-                    stream.CopyTo(memoryStream);
-                    myByte = memoryStream.ToArray();
+                    new1 = originalArray[i] + sliderValue;
+                    new2 = originalArray[i + 1] + sliderValue;
+                    new3 = originalArray[i + 2] + sliderValue;
+
+                    tempArray[i] = (byte)((new1 < 255) ? ((new1 > 0) ? new1 : 0) : 255);
+                    tempArray[i + 1] = (byte)((new2 < 255) ? ((new2 > 0) ? new2 : 0) : 255);
+                    tempArray[i + 2] = (byte)((new3 < 255) ? ((new3 > 0) ? new3 : 0) : 255);
+                    tempArray[i + 3] = (byte)255;
                 }
 
-                for (int i = 0; i < myByte.Length; i += 4)
+                WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
                 {
-                    myByte[i] += (byte)sliderValue;
-                    myByte[i + 1] += (byte)sliderValue;
-                    myByte[i + 2] += (byte)sliderValue;
+                    stream.Write(tempArray, 0, tempArray.Length);
                 }
-
-                using (Stream stream = wbitmap.PixelBuffer.AsStream())
-                {
-                    stream.Write(myByte, 0, myByte.Length);
-                }
-                selectedImage.Source = wbitmap;
+               
+                selectedImage.Source = wbitmapNew;
             }
+            changedFromSlider = false;
         }
 
         private void MultiplySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            MultiplyTextBox.Text = MultiplyingSlider.Value.ToString();
+            changedFromSlider = true;
+            double value = MultiplyingSlider.Value;
+            MultiplyTextBox.Text = (value > 0) ? value.ToString() : ((value == 0) ? "0" : ((-1) / value).ToString());
+
+            if(value != 0)
+            {
+                if (value < 0) { value = ((-1) / value); }
+
+                double new1, new2, new3;
+                AddTextBox.Text = AddingSlider.Value.ToString();
+
+                byte[] tempArray = new byte[originalArray.Length];
+                if (selectedImage != null)
+                {
+                    for (int i = 0; i < originalArray.Length; i += 4)
+                    {
+                        new1 = originalArray[i] * value;
+                        new2 = originalArray[i + 1] * value;
+                        new3 = originalArray[i + 2] * value;
+
+                        tempArray[i] = (byte)((new1 < 255) ? ((new1 > 0) ? new1 : 0) : 255);
+                        tempArray[i + 1] = (byte)((new2 < 255) ? ((new2 > 0) ? new2 : 0) : 255);
+                        tempArray[i + 2] = (byte)((new3 < 255) ? ((new3 > 0) ? new3 : 0) : 255);
+                        tempArray[i + 3] = (byte)255;
+                    }
+
+                    WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                    using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+                    {
+                        stream.Write(tempArray, 0, tempArray.Length);
+                    }
+
+                    selectedImage.Source = wbitmapNew;
+                }
+            }
+            changedFromSlider = false;
         }
 
-        
+        private void AddingTextBoxChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!changedFromSlider)
+            {
+                double value;
+                if (double.TryParse(AddTextBox.Text, out value))
+                {
+                    AddingSlider.Value = value;
+                }
+            }
+        }
 
+        private void MultiplyTextBoxChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!changedFromSlider)
+            {
+                double value;
+                if (double.TryParse(MultiplyTextBox.Text, out value))
+                {
+                    MultiplyingSlider.Value = value;
+                }
+            }
+        }
+
+        private void setImageResources()
+        {
+            WriteableBitmap wbitmap = selectedImage.Source as WriteableBitmap;
+            bitmapHeight = wbitmap.PixelHeight;
+            bitmapWidth = wbitmap.PixelWidth;
+            using (Stream stream = wbitmap.PixelBuffer.AsStream())
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                stream.CopyTo(memoryStream);
+                originalArray = memoryStream.ToArray();
+            }
+        }
 
 
         #endregion

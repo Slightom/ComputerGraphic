@@ -1865,13 +1865,13 @@
                         <StackPanel Orientation="Horizontal" Width="400" VerticalAlignment="Center">
                             <TextBlock x:Name="Adding" Text="Adding" Width="100" TextWrapping="Wrap" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-7,5,0"/>
                             <Slider x:Name="AddingSlider" Width="200" Maximum="255" Minimum="-255" Value="0" VerticalAlignment="Center" ValueChanged="AddingSlider_ValueChanged" IsThumbToolTipEnabled="False"/>
-                            <TextBox x:Name="AddTextBox" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                            <TextBox x:Name="AddTextBox" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="True" TextChanged="AddingTextBoxChanged"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Width="400" VerticalAlignment="Center">
                             <TextBlock x:Name="Multiplying" Text="Multiplying" Width="100" TextWrapping="Wrap" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-7,5,0"/>
-                            <Slider x:Name="MultiplyingSlider" Width="200" Maximum="255" Minimum="-255" Value="0" VerticalAlignment="Center" ValueChanged="MultiplySlider_ValueChanged" IsThumbToolTipEnabled="False"/>
-                            <TextBox x:Name="MultiplyTextBox" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="False" Style="{ui:StaticResource MyTextBoxDisable}"/>
+                            <Slider x:Name="MultiplyingSlider" Width="200" Maximum="255" Minimum="-255" StepFrequency="0.1" Value="0" VerticalAlignment="Center" ValueChanged="MultiplySlider_ValueChanged" IsThumbToolTipEnabled="False"/>
+                            <TextBox x:Name="MultiplyTextBox" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="True" TextChanged="MultiplyTextBoxChanged"/>
                         </StackPanel>
 
                         <Border BorderBrush="Gray" BorderThickness="1" Width="292" Margin="5,15" HorizontalAlignment="Left"/>
