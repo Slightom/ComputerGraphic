@@ -1235,7 +1235,7 @@ namespace ComputerGraphic
                 double new1;
                 for (int i = 0; i < displayingArray.Length; i += 4)
                 {
-                    new1 = (displayingArray[i] + displayingArray[i + 1] + displayingArray[i + 2])/3;
+                    new1 = (displayingArray[i] + displayingArray[i + 1] + displayingArray[i + 2]) / 3;
                     realBitValuesArray[i] = new1;
                     realBitValuesArray[i + 1] = new1;
                     realBitValuesArray[i + 2] = new1;
@@ -1282,6 +1282,95 @@ namespace ComputerGraphic
                 }
 
                 grayScale = true;
+                selectedImage.Source = wbitmapNew;
+                ResetSliders();
+            }
+        }
+
+        private void FiltrWygladzajacy1_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedImage != null)
+            {
+                double newR, newG, newB;
+                int tableWidth = bitmapWidth * 4, i;
+                byte[] tmp = new byte[displayingArray.Length];
+                displayingArray.CopyTo(tmp, 0);
+                for (int h = 1; h < bitmapHeight - 1; h++)
+                {
+                    for (int j = 4; j < tableWidth - 5; j += 4)
+                    {
+                        i = j + tableWidth * h;
+                        newB = (displayingArray[i - 4] + displayingArray[i] + displayingArray[i + 4] +
+                                displayingArray[i - 4 - tableWidth] + displayingArray[i - tableWidth] + displayingArray[i + 4 - tableWidth] +
+                                displayingArray[i - 4 + tableWidth] + displayingArray[i + tableWidth] + displayingArray[i + 4 + tableWidth]) / 9;
+
+                        newG = (displayingArray[i - 3] + displayingArray[i + 1] + displayingArray[i + 5] +
+                                displayingArray[i - 3 - tableWidth] + displayingArray[i + 1 - tableWidth] + displayingArray[i + 5 - tableWidth] +
+                                displayingArray[i - 3 + tableWidth] + displayingArray[i + 1 + tableWidth] + displayingArray[i + 5 + tableWidth]) / 9;
+
+                        newR = (displayingArray[i - 2] + displayingArray[i + 2] + displayingArray[i + 6] +
+                                displayingArray[i - 2 - tableWidth] + displayingArray[i + 2 - tableWidth] + displayingArray[i + 6 - tableWidth] +
+                                displayingArray[i - 2 + tableWidth] + displayingArray[i + 2 + tableWidth] + displayingArray[i + 6 + tableWidth]) / 9;
+
+                        tmp[i] = (byte)newB;
+                        tmp[i + 1] = (byte)newG;
+                        tmp[i + 2] = (byte)newR;
+                    }
+                }
+
+
+                WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+                {
+                    stream.Write(tmp, 0, tmp.Length);
+                }
+
+                selectedImage.Source = wbitmapNew;
+                ResetSliders();
+            }
+        }
+
+        private void FiltrWygladzajacy2_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedImage != null)
+            {
+                double newR, newG, newB;
+                double d1 = 0.0625; // 1/16
+                double d2 = 0.125;  // 2/16
+                double d3 = 0.25;   // 4/16
+                int tableWidth = bitmapWidth * 4, i;
+                byte[] tmp = new byte[displayingArray.Length];
+                displayingArray.CopyTo(tmp, 0);
+                for (int h = 1; h < bitmapHeight - 1; h++)
+                {
+                    for (int j = 4; j < tableWidth - 5; j += 4)
+                    {
+                        i = j + tableWidth * h;
+                        newB = (d2 * displayingArray[i - 4] + d3 * displayingArray[i] + d2 * displayingArray[i + 4] +
+                                d1 * displayingArray[i - 4 - tableWidth] + d2 * displayingArray[i - tableWidth] + d1 * displayingArray[i + 4 - tableWidth] +
+                                d1 * displayingArray[i - 4 + tableWidth] + d2 * displayingArray[i + tableWidth] + d1 * displayingArray[i + 4 + tableWidth]);
+
+                        newG = (d2 * displayingArray[i - 3] + d3 * displayingArray[i + 1] + d2 * displayingArray[i + 5] +
+                                d1 * displayingArray[i - 3 - tableWidth] + d2 * displayingArray[i + 1 - tableWidth] + d1 * displayingArray[i + 5 - tableWidth] +
+                                d1 * displayingArray[i - 3 + tableWidth] + d2 * displayingArray[i + 1 + tableWidth] + d1 * displayingArray[i + 5 + tableWidth]);
+
+                        newR = (d2 * displayingArray[i - 2] + d3 * displayingArray[i + 2] + d2 * displayingArray[i + 6] +
+                                d1 * displayingArray[i - 2 - tableWidth] + d2 * displayingArray[i + 2 - tableWidth] + d1 * displayingArray[i + 6 - tableWidth] +
+                                d1 * displayingArray[i - 2 + tableWidth] + d2 * displayingArray[i + 2 + tableWidth] + d1 * displayingArray[i + 6 + tableWidth]);
+
+                        tmp[i] = (byte)newB;
+                        tmp[i + 1] = (byte)newG;
+                        tmp[i + 2] = (byte)newR;
+                    }
+                }
+
+
+                WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+                {
+                    stream.Write(tmp, 0, tmp.Length);
+                }
+
                 selectedImage.Source = wbitmapNew;
                 ResetSliders();
             }

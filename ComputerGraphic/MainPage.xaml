@@ -1898,6 +1898,15 @@
                             <Button Name="ConvertToGrayButton2" Content="Convert to Grayscale 2" Click="ConvertToGrayScale2_Click" HorizontalAlignment="Stretch" Margin="5,5,0,5" Grid.Column="1"/>
                         </Grid>
 
+                        <Grid Width="400" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Name="FiltrWygladzajacyButton" Content="Filtr wygładząjący 1" Click="FiltrWygladzajacy1_Click" HorizontalAlignment="Stretch" Margin="0,5,5,5"/>
+                            <Button Name="FiltrWygladzajacy2Button" Content="Filtr wygładząjący 2" Click="FiltrWygladzajacy2_Click" HorizontalAlignment="Stretch" Margin="5,5,0,5" Grid.Column="1"/>
+                        </Grid>
+
                         <Button Name="ResetButton" Click="ResetButton_Click" Content="Reset"/>
 
                         <Border BorderBrush="Gray" BorderThickness="1" Width="292" Margin="5,15" HorizontalAlignment="Left"/>
