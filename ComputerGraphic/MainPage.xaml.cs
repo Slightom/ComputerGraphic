@@ -1461,6 +1461,95 @@ namespace ComputerGraphic
             return maskTab[maskTab.Length / 2];
         }
 
+        private void FiltrSobelaPoziomy_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedImage != null)
+            {
+                double newR, newG, newB;
+                double d1 = 0.0625; // 1/16
+                double d2 = 0.125;  // 2/16
+                double d3 = 0.25;   // 4/16
+                int tableWidth = bitmapWidth * 4, i;
+                byte[] tmp = new byte[displayingArray.Length];
+                displayingArray.CopyTo(tmp, 0);
+                for (int h = 1; h < bitmapHeight - 1; h++)
+                {
+                    for (int j = 4; j < tableWidth - 5; j += 4)
+                    {
+                        i = j + tableWidth * h;
+                        newB = ((-1) * displayingArray[i - 4 - tableWidth] + (-2) * displayingArray[i - tableWidth] + (-1) * displayingArray[i + 4 - tableWidth] +
+                                 displayingArray[i - 4 + tableWidth] + 2 * displayingArray[i + tableWidth] +  displayingArray[i + 4 + tableWidth]);
+
+                        newG = ((-1) * displayingArray[i - 3 - tableWidth] + (-2) * displayingArray[i + 1 - tableWidth] + (-1) * displayingArray[i + 5 - tableWidth] +
+                                 displayingArray[i - 3 + tableWidth] + 2 * displayingArray[i + 1 + tableWidth] + displayingArray[i + 5 + tableWidth]);
+
+                        newR = ((-1) * displayingArray[i - 2 - tableWidth] + (-2) * displayingArray[i + 2 - tableWidth] + (-1) * displayingArray[i + 6 - tableWidth] +
+                                 displayingArray[i - 2 + tableWidth] + 2 * displayingArray[i + 2 + tableWidth] + displayingArray[i + 6 + tableWidth]);
+
+                        tmp[i] = (byte)((newB >= 0) ? newB : 0);
+                        tmp[i + 1] = (byte)((newG >= 0) ? newG : 0);
+                        tmp[i + 2] = (byte)((newR >= 0) ? newR : 0);
+                    }
+                }
+
+
+                WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+                {
+                    stream.Write(tmp, 0, tmp.Length);
+                }
+
+                selectedImage.Source = wbitmapNew;
+                ResetSliders();
+            }
+        }
+
+        private void FiltrSobelaPionowy_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedImage != null)
+            {
+                double newR, newG, newB;
+                double d1 = 0.0625; // 1/16
+                double d2 = 0.125;  // 2/16
+                double d3 = 0.25;   // 4/16
+                int tableWidth = bitmapWidth * 4, i;
+                byte[] tmp = new byte[displayingArray.Length];
+                displayingArray.CopyTo(tmp, 0);
+                for (int h = 1; h < bitmapHeight - 1; h++)
+                {
+                    for (int j = 4; j < tableWidth - 5; j += 4)
+                    {
+                        i = j + tableWidth * h;
+                        newB = ((-2) * displayingArray[i - 4] + 2 * displayingArray[i + 4] +
+                                (-1) * displayingArray[i - 4 - tableWidth] + displayingArray[i + 4 - tableWidth] +
+                                (-1) * displayingArray[i - 4 + tableWidth] + displayingArray[i + 4 + tableWidth]);
+
+                        newG = ((-2) * displayingArray[i - 3] + 2 * displayingArray[i + 5] +
+                                (-1) * displayingArray[i - 3 - tableWidth] + displayingArray[i + 5 - tableWidth] +
+                                (-1) * displayingArray[i - 3 + tableWidth] + displayingArray[i + 5 + tableWidth]);
+
+                        newR = ((-2) * displayingArray[i - 2] + 2 * displayingArray[i + 6] + 
+                                (-1) * displayingArray[i - 2 - tableWidth]  + displayingArray[i + 6 - tableWidth] +
+                                (-1) * displayingArray[i - 2 + tableWidth] + displayingArray[i + 6 + tableWidth]);
+
+                        tmp[i] = (byte)((newB >= 0) ? newB : 0);
+                        tmp[i + 1] = (byte)((newG >= 0) ? newG : 0);
+                        tmp[i + 2] = (byte)((newR >= 0) ? newR : 0);
+                    }
+                }
+
+
+                WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+                {
+                    stream.Write(tmp, 0, tmp.Length);
+                }
+
+                selectedImage.Source = wbitmapNew;
+                ResetSliders();
+            }
+        }
+
         private void R_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Enter)

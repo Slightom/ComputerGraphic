@@ -1909,6 +1909,15 @@
 
                         <Button Name="FiltrMedianowyButton" Content="Filtr medianowy" Click="FiltrMedianowy1_Click" HorizontalAlignment="Stretch" Margin="0,5,0,5"/>
 
+                        <Grid Width="400" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Name="FiltrSobelaPoziomy1Button" Content="Filtr Sobela poziomy" Click="FiltrSobelaPoziomy_Click" HorizontalAlignment="Stretch" Margin="0,5,5,5"/>
+                            <Button Name="FiltrSobelaPionowyButton" Content="Filtr Sobela pionowy" Click="FiltrSobelaPionowy_Click" HorizontalAlignment="Stretch" Margin="5,5,0,5" Grid.Column="1"/>
+                        </Grid>
+
                         <Button Name="ResetButton" Click="ResetButton_Click" Content="Reset"/>
 
                         <Border BorderBrush="Gray" BorderThickness="1" Width="292" Margin="5,15" HorizontalAlignment="Left"/>
