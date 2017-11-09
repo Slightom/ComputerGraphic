@@ -1863,16 +1863,33 @@
                 <StackPanel Background="DarkGray" Orientation="Vertical">
                     <StackPanel Orientation="Vertical" Margin="9,10,5,5" >
                         <StackPanel Orientation="Horizontal" Width="400" VerticalAlignment="Center">
-                            <TextBlock x:Name="Adding" Text="Adding" Width="100" TextWrapping="Wrap" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-7,5,0"/>
-                            <Slider x:Name="AddingSlider" Width="200" Maximum="255" Minimum="-255" Value="0" VerticalAlignment="Center" ValueChanged="AddingSlider_ValueChanged" IsThumbToolTipEnabled="False"/>
-                            <TextBox x:Name="AddTextBox" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="True" TextChanged="AddingTextBoxChanged"/>
+                            <TextBlock x:Name="R" Text="R" Width="100" TextWrapping="Wrap" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-7,5,0"/>
+                            <Slider x:Name="RSlider2" Width="200" Maximum="255" Minimum="-255" Value="0" VerticalAlignment="Center" ValueChanged="RGBBrightnessSlider_ValueChanged" IsThumbToolTipEnabled="False"/>
+                            <TextBox x:Name="RTextBox2" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="True" KeyDown="R_KeyDown"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Width="400" VerticalAlignment="Center">
+                            <TextBlock x:Name="G" Text="G" Width="100" TextWrapping="Wrap" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-7,5,0"/>
+                            <Slider x:Name="GSlider2" Width="200" Maximum="255" Minimum="-255" Value="0" VerticalAlignment="Center" ValueChanged="RGBBrightnessSlider_ValueChanged" IsThumbToolTipEnabled="False"/>
+                            <TextBox x:Name="GTextBox2" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="True" KeyDown="G_KeyDown"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Width="400" VerticalAlignment="Center">
+                            <TextBlock x:Name="B" Text="B" Width="100" TextWrapping="Wrap" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-7,5,0"/>
+                            <Slider x:Name="BSlider2" Width="200" Maximum="255" Minimum="-255" Value="0" VerticalAlignment="Center" ValueChanged="RGBBrightnessSlider_ValueChanged" IsThumbToolTipEnabled="False"/>
+                            <TextBox x:Name="BTextBox2" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="True" KeyDown="B_KeyDown"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Width="400" VerticalAlignment="Center">
+                            <TextBlock x:Name="Brightness" Text="Brigtness" Width="100" TextWrapping="Wrap" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-7,5,0"/>
+                            <Slider x:Name="BrightnessSlider" Width="200" Maximum="255" Minimum="-255" Value="0" VerticalAlignment="Center" ValueChanged="RGBBrightnessSlider_ValueChanged" IsThumbToolTipEnabled="False"/>
+                            <TextBox x:Name="BrightnessTextBox" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="True" KeyDown="Brightness_KeyDown"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Width="400" VerticalAlignment="Center">
                             <TextBlock x:Name="Multiplying" Text="Multiplying" Width="100" TextWrapping="Wrap" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-7,5,0"/>
-                            <Slider x:Name="MultiplyingSlider" Width="200" Maximum="255" Minimum="-255" StepFrequency="0.1" Value="0" VerticalAlignment="Center" ValueChanged="MultiplySlider_ValueChanged" IsThumbToolTipEnabled="False"/>
-                            <TextBox x:Name="MultiplyTextBox" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="True" TextChanged="MultiplyTextBoxChanged"/>
+                            <Slider x:Name="MultiplyingSlider" Width="200" Maximum="256" Minimum="-255" StepFrequency="0.1" VerticalAlignment="Center" ValueChanged="MultiplySlider_ValueChanged" IsThumbToolTipEnabled="False"/>
+                            <TextBox x:Name="MultiplyTextBox" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="True" KeyDown="MultiplyTextBox_KeyDown"/>
                         </StackPanel>
+
+                        <Button Name="ResetButton" Click="ResetButton_Click" Content="Reset"/>
 
                         <Border BorderBrush="Gray" BorderThickness="1" Width="292" Margin="5,15" HorizontalAlignment="Left"/>
                     </StackPanel>

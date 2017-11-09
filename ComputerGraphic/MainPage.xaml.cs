@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComputerGraphic.Enums;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace ComputerGraphic
         private Shape selectedElement;
         private Image draggingImage;
         private Image selectedImage;
-        
+
 
         public MainPage()
         {
@@ -59,7 +60,7 @@ namespace ComputerGraphic
             //BitmapImage b = new BitmapImage(new Uri("C:\\Users\\Slightom\\Downloads\\ppm-obrazy-testowe\\ppm-test-01-p3.ppm"));
             //myBitMap.Source = b;
         }
-       
+
 
         #region PAINT
 
@@ -484,7 +485,7 @@ namespace ComputerGraphic
 
         private void Shape_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Hand, 0);           
+            Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Hand, 0);
         }
 
         private void Shape_PointerExited(object sender, PointerRoutedEventArgs e)
@@ -498,10 +499,10 @@ namespace ComputerGraphic
             selectedImage = null;
             if (sender is Line) { selectedElement = MyCanvas.Children.OfType<Line>().Where(x => x.Name == (sender as Line).Name).FirstOrDefault(); }
             else if (sender is Rectangle) { selectedElement = MyCanvas.Children.OfType<Rectangle>().Where(x => x.Name == (sender as Rectangle).Name).FirstOrDefault(); }
-            else if (sender is Ellipse){ selectedElement = MyCanvas.Children.OfType<Ellipse>().Where(x => x.Name == (sender as Ellipse).Name).FirstOrDefault(); }
+            else if (sender is Ellipse) { selectedElement = MyCanvas.Children.OfType<Ellipse>().Where(x => x.Name == (sender as Ellipse).Name).FirstOrDefault(); }
             else { selectedImage = sender as Image; }
 
-            if(selectedImage != null)
+            if (selectedImage != null)
             {
                 X1TextBox.Text = Canvas.GetLeft(selectedImage).ToString();
                 X2TextBox.Text = (Canvas.GetLeft(selectedImage) + selectedImage.Width).ToString();
@@ -539,7 +540,7 @@ namespace ComputerGraphic
                     Y2TextBox.Text = (Canvas.GetTop(selectedElement) + selectedElement.Height).ToString();
                 }
             }
-            
+
         }
         #endregion
 
@@ -622,7 +623,7 @@ namespace ComputerGraphic
             bitmap.SetSource(stream);
             Image Image = new Image();
             Image.Source = bitmap;
-            Image.DragStarting += Shape_DragStarting;           
+            Image.DragStarting += Shape_DragStarting;
             Image.CanDrag = true;
             Image.Name = "i" + MyCanvas.Children.Count().ToString();
             MyCanvas.Children.Add(Image);
@@ -689,7 +690,7 @@ namespace ComputerGraphic
             {
                 for (int i = 0, j = 0; i < array.Length; i += 4, j += 3)
                 {
-                    array[i] = (byte)(numbers[j +2] * 255 / max);
+                    array[i] = (byte)(numbers[j + 2] * 255 / max);
                     array[i + 1] = (byte)((numbers[j + 1]) * 255 / max);
                     array[i + 2] = (byte)((numbers[j]) * 255 / max);
                     array[i + 3] = (byte)255;
@@ -825,7 +826,7 @@ namespace ComputerGraphic
                 for (int i = 0; i < array.Length; i += 4)
                 {
                     byte[] rgb = reader.ReadBytes(3);
-                    array[i] = (byte) ((int)rgb[2] * 255 / max);
+                    array[i] = (byte)((int)rgb[2] * 255 / max);
                     array[i + 1] = (byte)((int)rgb[1] * 255 / max);
                     array[i + 2] = (byte)((int)rgb[0] * 255 / max);
                     array[i + 3] = (byte)255;
@@ -911,7 +912,7 @@ namespace ComputerGraphic
             KSlider.Value = CSlider.Value = MSlider.Value = YSlider.Value = 0;
             KTextBox.Text = CTextBox.Text = MTextBox.Text = YTextBox.Text = 0.ToString();
         }
-    
+
         private void ColorButton_Click(object sender, RoutedEventArgs e)
         {
             ColorPickerPopup.IsOpen = !ColorPickerPopup.IsOpen;
@@ -925,7 +926,7 @@ namespace ComputerGraphic
             this.colorLighter = setLighterColor(color);
             brush = new SolidColorBrush(color);
 
-            if(!CMYKSlidersChangingColorFlag)
+            if (!CMYKSlidersChangingColorFlag)
             {
                 //update RGB section 
                 RTextBox.Text = Convert.ToInt32(color.R).ToString();
@@ -970,11 +971,11 @@ namespace ComputerGraphic
             ColorButton.Background = brush;
             ColorPickerChangingColorFlag = false;
         }
-       
+
 
         private void SliderRGB_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if(!ColorPickerChangingColorFlag)
+            if (!ColorPickerChangingColorFlag)
             {
                 RGBSlidersChangingColorFlag = true;
 
@@ -989,11 +990,11 @@ namespace ComputerGraphic
 
                 RGBSlidersChangingColorFlag = false;
             }
-        }        
+        }
 
         private void SliderCMYK_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if(!ColorPickerChangingColorFlag)
+            if (!ColorPickerChangingColorFlag)
             {
                 CMYKSlidersChangingColorFlag = true;
 
@@ -1057,110 +1058,272 @@ namespace ComputerGraphic
 
         #region Transformations and Filtrs
 
-        private byte[] originalArray;
+        private byte[] originalArray, displayingArray;
+        private double[] realBitValuesArray;
         private int bitmapHeight, bitmapWidth;
         private bool changedFromSlider = false;
+        private double prevValueR=0, prevValueG=0, prevValueB=0, prevValueBrightness=0,
+            prevValueMultiplying=1;
 
-        private void AddingSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+       
+
+        private void RGBBrightnessSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             changedFromSlider = true;
-            int sliderValue = (int)AddingSlider.Value;
-            int new1, new2, new3;
-            AddTextBox.Text = AddingSlider.Value.ToString();
+            SliderEnum wiesiek = SliderEnum.Brightness;
+            double prevSLiderValue = 0;
+            string senderName = (sender is Slider) ? (sender as Slider).Name : (sender as TextBox).Name;
+            string sliderName = "", textboxName = "";
 
-            byte[] tempArray = new byte[originalArray.Length];
+            switch (senderName)
+            {
+                case "RSlider2":
+                case "RTextBox2":
+                    sliderName = "RSlider2";
+                    textboxName = "RTextBox2";
+                    wiesiek = SliderEnum.R;
+                    prevSLiderValue = prevValueR;
+                    break;
+
+                case "GSlider2":
+                case "GTextBox2":
+                    sliderName = "GSlider2";
+                    textboxName = "GTextBox2";
+                    wiesiek = SliderEnum.G;
+                    prevSLiderValue = prevValueG;
+                    break;
+
+                case "BSlider2":
+                case "BTextBox2":
+                    sliderName = "BSlider2";
+                    textboxName = "BTextBox2";
+                    wiesiek = SliderEnum.B;
+                    prevSLiderValue = prevValueB;
+                    break;
+
+                case "BrightnessSlider":
+                case "BrightnessTextBox":
+                    sliderName = "BrightnessSlider";
+                    textboxName = "BrightnessTextBox";
+                    wiesiek = SliderEnum.Brightness;
+                    prevSLiderValue = prevValueBrightness;
+                    break;
+            }
+
+            double sliderValue = ((Slider)this.FindName(sliderName)).Value;
+            double sliderChangeValue = sliderValue - prevSLiderValue;
+            double new1, new2, new3;
+            ((TextBox)this.FindName(textboxName)).Text = sliderValue.ToString();
+
             if (selectedImage != null)
             {
-                for (int i = 0; i < originalArray.Length; i += 4)
+                switch(wiesiek)
                 {
-                    new1 = originalArray[i] + sliderValue;
-                    new2 = originalArray[i + 1] + sliderValue;
-                    new3 = originalArray[i + 2] + sliderValue;
+                    case SliderEnum.R:
+                        for (int i = 0; i < displayingArray.Length; i += 4)
+                        {
+                            new3 = realBitValuesArray[i + 2] + sliderChangeValue;
+                            realBitValuesArray[i + 2] = new3;
 
-                    tempArray[i] = (byte)((new1 < 255) ? ((new1 > 0) ? new1 : 0) : 255);
-                    tempArray[i + 1] = (byte)((new2 < 255) ? ((new2 > 0) ? new2 : 0) : 255);
-                    tempArray[i + 2] = (byte)((new3 < 255) ? ((new3 > 0) ? new3 : 0) : 255);
-                    tempArray[i + 3] = (byte)255;
+                            displayingArray[i + 2] = (byte)((new3 < 255) ? ((new3 > 0) ? new3 : 0) : 255);
+                        }
+                        prevValueR = sliderValue;
+                        break;
+
+                    case SliderEnum.G:
+                        for (int i = 0; i < displayingArray.Length; i += 4)
+                        {
+                            new2 = realBitValuesArray[i + 1] + sliderChangeValue;
+                            realBitValuesArray[i + 1] = new2;
+
+                            displayingArray[i + 1] = (byte)((new2 < 255) ? ((new2 > 0) ? new2 : 0) : 255);
+                        }
+                        prevValueG = sliderValue;
+                        break;
+
+                    case SliderEnum.B:
+                        for (int i = 0; i < displayingArray.Length; i += 4)
+                        { 
+                            new1 = realBitValuesArray[i] + sliderChangeValue;
+                            realBitValuesArray[i] = new1;
+
+                            displayingArray[i] = (byte)((new1 < 255) ? ((new1 > 0) ? new1 : 0) : 255);
+                        }
+                        prevValueB = sliderValue;
+                        break;
+
+                    case SliderEnum.Brightness:
+                        for (int i = 0; i < displayingArray.Length; i += 4)
+                        {
+                            new1 = realBitValuesArray[i] + sliderChangeValue;
+                            new2 = realBitValuesArray[i + 1] + sliderChangeValue;
+                            new3 = realBitValuesArray[i + 2] + sliderChangeValue;
+                            realBitValuesArray[i] = new1;
+                            realBitValuesArray[i + 1] = new2;
+                            realBitValuesArray[i + 2] = new3;
+
+                            displayingArray[i] = (byte)((new1 < 255) ? ((new1 > 0) ? new1 : 0) : 255);
+                            displayingArray[i + 1] = (byte)((new2 < 255) ? ((new2 > 0) ? new2 : 0) : 255);
+                            displayingArray[i + 2] = (byte)((new3 < 255) ? ((new3 > 0) ? new3 : 0) : 255);
+                        }
+                        prevValueBrightness = sliderValue;
+                        break;
                 }
+                
 
                 WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
                 using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
                 {
-                    stream.Write(tempArray, 0, tempArray.Length);
+                    stream.Write(displayingArray, 0, displayingArray.Length);
                 }
-               
+
                 selectedImage.Source = wbitmapNew;
             }
             changedFromSlider = false;
         }
 
+        private void Brightness_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if(e.Key == Windows.System.VirtualKey.Enter)
+            {
+                if (!changedFromSlider)
+                {
+                    double value;
+                    if (double.TryParse(BrightnessTextBox.Text, out value))
+                    {
+                        BrightnessSlider.Value = value;
+                    }
+                }
+            }          
+        }
+
+        private void G_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                if (!changedFromSlider)
+                {
+                    double value;
+                    if (double.TryParse(GTextBox2.Text, out value))
+                    {
+                        GSlider2.Value = value;
+                    }
+                }
+            }
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(selectedImage != null)
+            {
+                ResetImageManipulator();
+
+                WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+                {
+                    stream.Write(originalArray, 0, originalArray.Length);
+                }
+                selectedImage.Source = wbitmapNew;
+
+            }
+        }
+
+        private void R_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                if (!changedFromSlider)
+                {
+                    double value;
+                    if (double.TryParse(RTextBox2.Text, out value))
+                    {
+                        RSlider2.Value = value;
+                    }
+                }
+            }
+        }
+
+        private void B_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                if (!changedFromSlider)
+                {
+                    double value;
+                    if (double.TryParse(BTextBox2.Text, out value))
+                    {
+                        BSlider2.Value = value;
+                    }
+                }
+            }
+        }
+
         private void MultiplySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             changedFromSlider = true;
+
             double value = MultiplyingSlider.Value;
-            MultiplyTextBox.Text = (value > 0) ? value.ToString() : ((value == 0) ? "0" : ((-1) / value).ToString());
+            if (value != 0)
+            {              
+                MultiplyTextBox.Text = value.ToString();
 
-            if(value != 0)
-            {
                 if (value < 0) { value = ((-1) / value); }
-
                 double new1, new2, new3;
-                AddTextBox.Text = AddingSlider.Value.ToString();
 
-                byte[] tempArray = new byte[originalArray.Length];
                 if (selectedImage != null)
                 {
-                    for (int i = 0; i < originalArray.Length; i += 4)
+                    for (int i = 0; i < displayingArray.Length; i += 4)
                     {
-                        new1 = originalArray[i] * value;
-                        new2 = originalArray[i + 1] * value;
-                        new3 = originalArray[i + 2] * value;
+                        new1 = realBitValuesArray[i] * (1/prevValueMultiplying) * value;
+                        new2 = realBitValuesArray[i + 1] * (1 / prevValueMultiplying) * value;
+                        new3 = realBitValuesArray[i + 2] * (1 / prevValueMultiplying) * value;
+                        realBitValuesArray[i] = new1;
+                        realBitValuesArray[i + 1] = new2;
+                        realBitValuesArray[i + 2] = new3;
 
-                        tempArray[i] = (byte)((new1 < 255) ? ((new1 > 0) ? new1 : 0) : 255);
-                        tempArray[i + 1] = (byte)((new2 < 255) ? ((new2 > 0) ? new2 : 0) : 255);
-                        tempArray[i + 2] = (byte)((new3 < 255) ? ((new3 > 0) ? new3 : 0) : 255);
-                        tempArray[i + 3] = (byte)255;
+                        displayingArray[i] = (byte)((new1 < 255) ? ((new1 > 0) ? new1 : 0) : 255);
+                        displayingArray[i + 1] = (byte)((new2 < 255) ? ((new2 > 0) ? new2 : 0) : 255);
+                        displayingArray[i + 2] = (byte)((new3 < 255) ? ((new3 > 0) ? new3 : 0) : 255);
                     }
 
                     WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
                     using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
                     {
-                        stream.Write(tempArray, 0, tempArray.Length);
+                        stream.Write(displayingArray, 0, displayingArray.Length);
                     }
 
                     selectedImage.Source = wbitmapNew;
+                    prevValueMultiplying = value;
                 }
             }
             changedFromSlider = false;
         }
 
-        private void AddingTextBoxChanged(object sender, TextChangedEventArgs e)
+        private void MultiplyTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (!changedFromSlider)
+            if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                double value;
-                if (double.TryParse(AddTextBox.Text, out value))
+                if (!changedFromSlider)
                 {
-                    AddingSlider.Value = value;
+                    double value;
+                    if (double.TryParse(MultiplyTextBox.Text, out value))
+                    {
+                        MultiplyingSlider.Value = value;
+                    }
                 }
             }
         }
 
-        private void MultiplyTextBoxChanged(object sender, TextChangedEventArgs e)
-        {
-            if (!changedFromSlider)
-            {
-                double value;
-                if (double.TryParse(MultiplyTextBox.Text, out value))
-                {
-                    MultiplyingSlider.Value = value;
-                }
-            }
-        }
 
         private void setImageResources()
         {
-            WriteableBitmap wbitmap = selectedImage.Source as WriteableBitmap;
+            WriteableBitmap wbitmap;
+            //if ((selectedImage.Source as WriteableBitmap) is null)
+            //{
+            //    BitmapImage bi = selectedImage.Source as BitmapImage;
+
+            //}
+            wbitmap = selectedImage.Source as WriteableBitmap;
             bitmapHeight = wbitmap.PixelHeight;
             bitmapWidth = wbitmap.PixelWidth;
             using (Stream stream = wbitmap.PixelBuffer.AsStream())
@@ -1168,7 +1331,34 @@ namespace ComputerGraphic
             {
                 stream.CopyTo(memoryStream);
                 originalArray = memoryStream.ToArray();
-            }
+            }           
+
+            ResetImageManipulator();
+        }
+
+        private void ResetImageManipulator()
+        {
+            realBitValuesArray = new double[originalArray.Length];
+            displayingArray = new byte[originalArray.Length];
+            originalArray.CopyTo(realBitValuesArray, 0);
+            originalArray.CopyTo(displayingArray, 0);
+
+            prevValueR = 0;
+            prevValueG = 0;
+            prevValueB = 0;
+            prevValueBrightness = 0;
+            prevValueMultiplying = 1;
+            RSlider2.Value = 0;
+            GSlider2.Value = 0;
+            BSlider2.Value = 0;
+            BrightnessSlider.Value = 0;
+            MultiplyingSlider.Value = 1;
+
+            RTextBox2.Text = "0";
+            GTextBox2.Text = "0";
+            BTextBox2.Text = "0";
+            BrightnessTextBox.Text = "0";
+            MultiplyTextBox.Text = "1";           
         }
 
 
