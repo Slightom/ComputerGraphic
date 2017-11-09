@@ -1376,6 +1376,91 @@ namespace ComputerGraphic
             }
         }
 
+        private void FiltrMedianowy1_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedImage != null)
+            {
+                double newR, newG, newB;
+                int tableWidth = bitmapWidth * 4, i;
+                int[] maskTab = new int[9];
+                byte[] tmp = new byte[displayingArray.Length];
+                displayingArray.CopyTo(tmp, 0);
+                for (int h = 1; h < bitmapHeight - 1; h++)
+                {
+                    for (int j = 4; j < tableWidth - 5; j += 4)
+                    {
+                        i = j + tableWidth * h;
+
+                        maskTab[0] = displayingArray[i - 4];
+                        maskTab[1] = displayingArray[i];
+                        maskTab[2] = displayingArray[i + 4];
+                        maskTab[3] = displayingArray[i - 4 - tableWidth];
+                        maskTab[4] = displayingArray[i - tableWidth];
+                        maskTab[5] = displayingArray[i + 4 - tableWidth];
+                        maskTab[6] = displayingArray[i - 4 + tableWidth];
+                        maskTab[7] = displayingArray[i + tableWidth];
+                        maskTab[8] = displayingArray[i + 4 + tableWidth];
+                        newB = Mediana(maskTab);
+
+                        maskTab[0] = displayingArray[i - 3];
+                        maskTab[1] = displayingArray[i + 1];
+                        maskTab[2] = displayingArray[i + 5];
+                        maskTab[3] = displayingArray[i - 3 - tableWidth];
+                        maskTab[4] = displayingArray[i + 1 - tableWidth];
+                        maskTab[5] = displayingArray[i + 5 - tableWidth];
+                        maskTab[6] = displayingArray[i - 3 + tableWidth];
+                        maskTab[7] = displayingArray[i + 1 +tableWidth];
+                        maskTab[8] = displayingArray[i + 5 + tableWidth];
+                        newG = Mediana(maskTab);
+
+                        maskTab[0] = displayingArray[i - 2];
+                        maskTab[1] = displayingArray[i + 2];
+                        maskTab[2] = displayingArray[i + 6];
+                        maskTab[3] = displayingArray[i - 2 - tableWidth];
+                        maskTab[4] = displayingArray[i + 2 - tableWidth];
+                        maskTab[5] = displayingArray[i + 6 - tableWidth];
+                        maskTab[6] = displayingArray[i - 2 + tableWidth];
+                        maskTab[7] = displayingArray[i + 2 + tableWidth];
+                        maskTab[8] = displayingArray[i + 6 + tableWidth];
+                        newR = Mediana(maskTab);
+
+                        tmp[i] = (byte)newB;
+                        tmp[i + 1] = (byte)newG;
+                        tmp[i + 2] = (byte)newR;
+                    }
+                }
+
+
+                WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+                {
+                    stream.Write(tmp, 0, tmp.Length);
+                }
+
+                selectedImage.Source = wbitmapNew;
+                ResetSliders();
+            }
+        }
+
+        private double Mediana(int[] maskTab)
+        {
+            int buf;
+            for(int i=0; i<maskTab.Length - 1; i++)
+            {
+                for(int j=0; j<maskTab.Length - 1; j++)
+                {
+                    if(maskTab[j] > maskTab[j+1])
+                    {
+                        buf = maskTab[j];
+                        maskTab[j] = maskTab[j + 1];
+                        maskTab[j + 1] = buf;
+                    }
+                }
+            }
+
+            return maskTab[maskTab.Length / 2];
+        }
+
         private void R_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Enter)

@@ -1903,9 +1903,11 @@
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
-                            <Button Name="FiltrWygladzajacyButton" Content="Filtr wygładząjący 1" Click="FiltrWygladzajacy1_Click" HorizontalAlignment="Stretch" Margin="0,5,5,5"/>
+                            <Button Name="FiltrWygladzajacy1Button" Content="Filtr wygładząjący 1" Click="FiltrWygladzajacy1_Click" HorizontalAlignment="Stretch" Margin="0,5,5,5"/>
                             <Button Name="FiltrWygladzajacy2Button" Content="Filtr wygładząjący 2" Click="FiltrWygladzajacy2_Click" HorizontalAlignment="Stretch" Margin="5,5,0,5" Grid.Column="1"/>
                         </Grid>
+
+                        <Button Name="FiltrMedianowyButton" Content="Filtr medianowy" Click="FiltrMedianowy1_Click" HorizontalAlignment="Stretch" Margin="0,5,0,5"/>
 
                         <Button Name="ResetButton" Click="ResetButton_Click" Content="Reset"/>
 
