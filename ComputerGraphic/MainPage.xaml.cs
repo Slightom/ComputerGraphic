@@ -12,6 +12,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -1064,6 +1065,7 @@ namespace ComputerGraphic
         private bool changedFromSlider = false, grayScale = false;
         private double prevValueR = 0, prevValueG = 0, prevValueB = 0, prevValueBrightness = 0,
             prevValueMultiplying = 1;
+        VirtualKey? pressedKey;
 
 
 
@@ -1466,9 +1468,6 @@ namespace ComputerGraphic
             if (selectedImage != null)
             {
                 double newR, newG, newB;
-                double d1 = 0.0625; // 1/16
-                double d2 = 0.125;  // 2/16
-                double d3 = 0.25;   // 4/16
                 int tableWidth = bitmapWidth * 4, i;
                 byte[] tmp = new byte[displayingArray.Length];
                 displayingArray.CopyTo(tmp, 0);
@@ -1509,26 +1508,24 @@ namespace ComputerGraphic
             if (selectedImage != null)
             {
                 double newR, newG, newB;
-                double d1 = 0.0625; // 1/16
-                double d2 = 0.125;  // 2/16
-                double d3 = 0.25;   // 4/16
-                int tableWidth = bitmapWidth * 4, i;
                 byte[] tmp = new byte[displayingArray.Length];
                 displayingArray.CopyTo(tmp, 0);
+                int tableWidth = bitmapWidth * 4, i;
+
                 for (int h = 1; h < bitmapHeight - 1; h++)
                 {
                     for (int j = 4; j < tableWidth - 5; j += 4)
                     {
                         i = j + tableWidth * h;
-                        newB = ((-2) * displayingArray[i - 4] + 2 * displayingArray[i + 4] +
+                        newB = ((-1) * displayingArray[i - 4] + 2 * displayingArray[i + 4] +
                                 (-1) * displayingArray[i - 4 - tableWidth] + displayingArray[i + 4 - tableWidth] +
                                 (-1) * displayingArray[i - 4 + tableWidth] + displayingArray[i + 4 + tableWidth]);
 
-                        newG = ((-2) * displayingArray[i - 3] + 2 * displayingArray[i + 5] +
+                        newG = ((-1) * displayingArray[i - 3] + 2 * displayingArray[i + 5] +
                                 (-1) * displayingArray[i - 3 - tableWidth] + displayingArray[i + 5 - tableWidth] +
                                 (-1) * displayingArray[i - 3 + tableWidth] + displayingArray[i + 5 + tableWidth]);
 
-                        newR = ((-2) * displayingArray[i - 2] + 2 * displayingArray[i + 6] + 
+                        newR = ((-1) * displayingArray[i - 2] + 2 * displayingArray[i + 6] + 
                                 (-1) * displayingArray[i - 2 - tableWidth]  + displayingArray[i + 6 - tableWidth] +
                                 (-1) * displayingArray[i - 2 + tableWidth] + displayingArray[i + 6 + tableWidth]);
 
@@ -1549,6 +1546,104 @@ namespace ComputerGraphic
                 ResetSliders();
             }
         }
+
+        private void FiltrWyostrzający_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedImage != null)
+            {
+                double newR, newG, newB;
+                double d1 = 0.0625; // 1/16
+                double d2 = 0.125;  // 2/16
+                double d3 = 0.25;   // 4/16
+                int tableWidth = bitmapWidth * 4, i;
+                byte[] tmp = new byte[displayingArray.Length];
+                displayingArray.CopyTo(tmp, 0);
+                for (int h = 1; h < bitmapHeight - 1; h++)
+                {
+                    for (int j = 4; j < tableWidth - 5; j += 4)
+                    {
+                        i = j + tableWidth * h;
+                        newB = ((-1) * displayingArray[i - 4] + 9 * displayingArray[i] + (-1) * displayingArray[i + 4] +
+                                (-1) * displayingArray[i - 4 - tableWidth] + (-1) * displayingArray[i - tableWidth] + (-1) * displayingArray[i + 4 - tableWidth] +
+                                (-1) * displayingArray[i - 4 + tableWidth] + (-1) * displayingArray[i + tableWidth] + (-1) * displayingArray[i + 4 + tableWidth]);
+
+                        newG = ((-1) * displayingArray[i - 3] + 9 * displayingArray[i + 1] + (-1) * displayingArray[i + 5] +
+                                (-1) * displayingArray[i - 3 - tableWidth] + (-1) * displayingArray[i + 1 - tableWidth] + (-1) * displayingArray[i + 5 - tableWidth] +
+                                (-1) * displayingArray[i - 3 + tableWidth] + (-1) * displayingArray[i + 1 + tableWidth] + (-1) * displayingArray[i + 5 + tableWidth]);
+
+                        newR = ((-1) * displayingArray[i - 2] + 9 * displayingArray[i + 2] + (-1) * displayingArray[i + 6] +
+                                (-1) * displayingArray[i - 2 - tableWidth] + (-1) * displayingArray[i + 2 - tableWidth] + (-1) * displayingArray[i + 6 - tableWidth] +
+                                (-1) * displayingArray[i - 2 + tableWidth] + (-1) * displayingArray[i + 2 + tableWidth] + (-1) * displayingArray[i + 6 + tableWidth]);
+
+                        tmp[i] = (byte)((newB > 0) ? newB : 0);
+                        tmp[i + 1] = (byte)((newG > 0) ? newG : 0);
+                        tmp[i + 2] = (byte)((newR > 0) ? newR : 0);
+                    }
+                }
+
+
+                WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+                {
+                    stream.Write(tmp, 0, tmp.Length);
+                }
+
+                selectedImage.Source = wbitmapNew;
+                ResetSliders();
+            }
+        }
+
+        private void FiltrRozmycieGaussa_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedImage != null)
+            {
+                double newR, newG, newB;
+                double d1 = 0.0625; // 1/16
+                double d2 = 0.125;  // 2/16
+                double d3 = 0.25;   // 4/16
+                int tableWidth = bitmapWidth * 4, i;
+                byte[] tmp = new byte[displayingArray.Length];
+                displayingArray.CopyTo(tmp, 0);
+                for (int h = 1; h < bitmapHeight - 1; h++)
+                {
+                    for (int j = 4; j < tableWidth - 5; j += 4)
+                    {
+                        i = j + tableWidth * h;
+                        newB = (2 * displayingArray[i - 4] + 4 * displayingArray[i] + 2 * displayingArray[i + 4] +
+                                displayingArray[i - 4 - tableWidth] + 2 * displayingArray[i - tableWidth] + displayingArray[i + 4 - tableWidth] +
+                                displayingArray[i - 4 + tableWidth] + 2 * displayingArray[i + tableWidth] + displayingArray[i + 4 + tableWidth]) / 16;
+
+                        newG = (2 * displayingArray[i - 3] + 4 * displayingArray[i + 1] + 2 * displayingArray[i + 5] +
+                                displayingArray[i - 3 - tableWidth] + 2 * displayingArray[i + 1 - tableWidth] + displayingArray[i + 5 - tableWidth] +
+                                displayingArray[i - 3 + tableWidth] + 2 * displayingArray[i + 1 + tableWidth] + displayingArray[i + 5 + tableWidth]) / 16;
+
+                        newR = (2 * displayingArray[i - 2] + 4 * displayingArray[i + 2] + 2 * displayingArray[i + 6] +
+                                displayingArray[i - 2 - tableWidth] + 2 * displayingArray[i + 2 - tableWidth] + displayingArray[i + 6 - tableWidth] +
+                                displayingArray[i - 2 + tableWidth] + 2 * displayingArray[i + 2 + tableWidth] + displayingArray[i + 6 + tableWidth]) / 16;
+
+                        tmp[i] = (byte)newB;
+                        tmp[i + 1] = (byte)newG;
+                        tmp[i + 2] = (byte)newR;
+                    }
+                }
+
+
+                WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+                {
+                    stream.Write(tmp, 0, tmp.Length);
+                }
+
+                selectedImage.Source = wbitmapNew;
+                ResetSliders();
+            }
+        }
+
+        private void ModifyImage_Click(object sender, RoutedEventArgs e)
+        {
+            ImageManipulatorPopup.IsOpen = !ImageManipulatorPopup.IsOpen;
+        }
+
 
         private void R_KeyDown(object sender, KeyRoutedEventArgs e)
         {
