@@ -1859,9 +1859,9 @@
                 </StackPanel>
             </Popup>
 
-            <Popup Name="ImageManipulator" IsOpen="True" HorizontalAlignment="Right" Margin="0,5,420,0">
+            <Popup Name="ImageManipulator" IsOpen="True" HorizontalAlignment="Right" Margin="0,5,423,0">
                 <StackPanel Background="DarkGray" Orientation="Vertical">
-                    <StackPanel Orientation="Vertical" Margin="9,10,5,5" >
+                    <StackPanel Orientation="Vertical" Margin="9,10,9,5" >
                         <StackPanel Orientation="Horizontal" Width="400" VerticalAlignment="Center">
                             <TextBlock x:Name="R" Text="R" Width="100" TextWrapping="Wrap" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-7,5,0"/>
                             <Slider x:Name="RSlider2" Width="200" Maximum="255" Minimum="-255" Value="0" VerticalAlignment="Center" ValueChanged="RGBBrightnessSlider_ValueChanged" IsThumbToolTipEnabled="False"/>
@@ -1888,6 +1888,15 @@
                             <Slider x:Name="MultiplyingSlider" Width="200" Maximum="256" Minimum="-255" StepFrequency="0.1" VerticalAlignment="Center" ValueChanged="MultiplySlider_ValueChanged" IsThumbToolTipEnabled="False"/>
                             <TextBox x:Name="MultiplyTextBox" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="True" KeyDown="MultiplyTextBox_KeyDown"/>
                         </StackPanel>
+
+                        <Grid Width="400" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Name="ConvertToGrayButton1" Content="Convert to Grayscale 1" Click="ConvertToGrayScale1_Click" HorizontalAlignment="Stretch" Margin="0,5,5,5"/>
+                            <Button Name="ConvertToGrayButton2" Content="Convert to Grayscale 2" Click="ConvertToGrayScale2_Click" HorizontalAlignment="Stretch" Margin="5,5,0,5" Grid.Column="1"/>
+                        </Grid>
 
                         <Button Name="ResetButton" Click="ResetButton_Click" Content="Reset"/>
 

@@ -1061,11 +1061,11 @@ namespace ComputerGraphic
         private byte[] originalArray, displayingArray;
         private double[] realBitValuesArray;
         private int bitmapHeight, bitmapWidth;
-        private bool changedFromSlider = false;
-        private double prevValueR=0, prevValueG=0, prevValueB=0, prevValueBrightness=0,
-            prevValueMultiplying=1;
+        private bool changedFromSlider = false, grayScale = false;
+        private double prevValueR = 0, prevValueG = 0, prevValueB = 0, prevValueBrightness = 0,
+            prevValueMultiplying = 1;
 
-       
+
 
         private void RGBBrightnessSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
@@ -1117,7 +1117,7 @@ namespace ComputerGraphic
 
             if (selectedImage != null)
             {
-                switch(wiesiek)
+                switch (wiesiek)
                 {
                     case SliderEnum.R:
                         for (int i = 0; i < displayingArray.Length; i += 4)
@@ -1143,7 +1143,7 @@ namespace ComputerGraphic
 
                     case SliderEnum.B:
                         for (int i = 0; i < displayingArray.Length; i += 4)
-                        { 
+                        {
                             new1 = realBitValuesArray[i] + sliderChangeValue;
                             realBitValuesArray[i] = new1;
 
@@ -1169,7 +1169,7 @@ namespace ComputerGraphic
                         prevValueBrightness = sliderValue;
                         break;
                 }
-                
+
 
                 WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
                 using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
@@ -1184,7 +1184,7 @@ namespace ComputerGraphic
 
         private void Brightness_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if(e.Key == Windows.System.VirtualKey.Enter)
+            if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 if (!changedFromSlider)
                 {
@@ -1194,7 +1194,7 @@ namespace ComputerGraphic
                         BrightnessSlider.Value = value;
                     }
                 }
-            }          
+            }
         }
 
         private void G_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -1214,7 +1214,7 @@ namespace ComputerGraphic
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
-            if(selectedImage != null)
+            if (selectedImage != null)
             {
                 ResetImageManipulator();
 
@@ -1225,6 +1225,65 @@ namespace ComputerGraphic
                 }
                 selectedImage.Source = wbitmapNew;
 
+            }
+        }
+
+        private void ConvertToGrayScale1_Click(object sender, RoutedEventArgs e)
+        {
+            if (!grayScale && (selectedImage != null))
+            {
+                double new1;
+                for (int i = 0; i < displayingArray.Length; i += 4)
+                {
+                    new1 = (displayingArray[i] + displayingArray[i + 1] + displayingArray[i + 2])/3;
+                    realBitValuesArray[i] = new1;
+                    realBitValuesArray[i + 1] = new1;
+                    realBitValuesArray[i + 2] = new1;
+
+                    displayingArray[i] = (byte)new1;
+                    displayingArray[i + 1] = (byte)new1;
+                    displayingArray[i + 2] = (byte)new1;
+                }
+
+                WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+                {
+                    stream.Write(displayingArray, 0, displayingArray.Length);
+                }
+
+                grayScale = true;
+                selectedImage.Source = wbitmapNew;
+                ResetSliders();
+            }
+        }
+
+
+        private void ConvertToGrayScale2_Click(object sender, RoutedEventArgs e)
+        {
+            if (!grayScale && (selectedImage != null))
+            {
+                double new1;
+                for (int i = 0; i < displayingArray.Length; i += 4)
+                {
+                    new1 = 0.114 * displayingArray[i] + 0.587 * displayingArray[i + 1] + 0.299 * displayingArray[i + 2];
+                    realBitValuesArray[i] = new1;
+                    realBitValuesArray[i + 1] = new1;
+                    realBitValuesArray[i + 2] = new1;
+
+                    displayingArray[i] = (byte)new1;
+                    displayingArray[i + 1] = (byte)new1;
+                    displayingArray[i + 2] = (byte)new1;
+                }
+
+                WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+                using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+                {
+                    stream.Write(displayingArray, 0, displayingArray.Length);
+                }
+
+                grayScale = true;
+                selectedImage.Source = wbitmapNew;
+                ResetSliders();
             }
         }
 
@@ -1264,7 +1323,7 @@ namespace ComputerGraphic
 
             double value = MultiplyingSlider.Value;
             if (value != 0)
-            {              
+            {
                 MultiplyTextBox.Text = value.ToString();
 
                 if (value < 0) { value = ((-1) / value); }
@@ -1274,7 +1333,7 @@ namespace ComputerGraphic
                 {
                     for (int i = 0; i < displayingArray.Length; i += 4)
                     {
-                        new1 = realBitValuesArray[i] * (1/prevValueMultiplying) * value;
+                        new1 = realBitValuesArray[i] * (1 / prevValueMultiplying) * value;
                         new2 = realBitValuesArray[i + 1] * (1 / prevValueMultiplying) * value;
                         new3 = realBitValuesArray[i + 2] * (1 / prevValueMultiplying) * value;
                         realBitValuesArray[i] = new1;
@@ -1331,7 +1390,7 @@ namespace ComputerGraphic
             {
                 stream.CopyTo(memoryStream);
                 originalArray = memoryStream.ToArray();
-            }           
+            }
 
             ResetImageManipulator();
         }
@@ -1342,7 +1401,13 @@ namespace ComputerGraphic
             displayingArray = new byte[originalArray.Length];
             originalArray.CopyTo(realBitValuesArray, 0);
             originalArray.CopyTo(displayingArray, 0);
+            grayScale = false;
 
+            ResetSliders();
+        }
+
+        private void ResetSliders()
+        {
             prevValueR = 0;
             prevValueG = 0;
             prevValueB = 0;
@@ -1358,9 +1423,8 @@ namespace ComputerGraphic
             GTextBox2.Text = "0";
             BTextBox2.Text = "0";
             BrightnessTextBox.Text = "0";
-            MultiplyTextBox.Text = "1";           
+            MultiplyTextBox.Text = "1";
         }
-
 
         #endregion
     }
