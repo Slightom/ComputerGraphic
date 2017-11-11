@@ -1931,7 +1931,17 @@
                             <Button Name="HistogramNormalizeButton" Content="Histogram equalization" Click="HistogramNormalize_Click" HorizontalAlignment="Stretch" Margin="5,5,0,5" Grid.Column="1"/>
                         </Grid>
 
-                        <Button Name="ResetButton" Click="ResetButton_Click" Content="Reset"/>
+                        <StackPanel Orientation="Horizontal" Width="400" VerticalAlignment="Center">
+                            <CheckBox Name="BinarizationCheckBox" IsChecked="False"  Margin="5,0,0,5" Width="20" Content="Binarization" Foreground="White"/>
+                            <TextBlock x:Name="ThresholdLevel" Text="Threshold Level" Width="120" FontSize="16" VerticalAlignment="Center" Margin="70,-7,5,0"/>
+                            <TextBox x:Name="BinarizationTextBox" Height="32" Width="70" FontSize="14" Margin="5,-7,5,0" IsEnabled="True" KeyDown="Binarization_KeyDown"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Width="400" VerticalAlignment="Center" Margin="0,5">
+                            <TextBlock x:Name="PercentBlack" Text="Percent Black" Width="120" TextWrapping="Wrap" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="195,-7,5,0"/>
+                            <TextBox x:Name="PercentBlackTextBox" Height="32" Width="70" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,-7,5,0" IsEnabled="True" KeyDown="PercentBlack_KeyDown"/>
+                        </StackPanel>
+
+                        <Button Name="ResetButton" Click="ResetButton_Click" Content="Reset" Background="Red"/>
 
                         <Border BorderBrush="Gray" BorderThickness="1" Width="292" Margin="5,15" HorizontalAlignment="Left"/>
                     </StackPanel>
