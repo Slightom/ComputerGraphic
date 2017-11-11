@@ -1057,6 +1057,7 @@ namespace ComputerGraphic
         #endregion
 
 
+
         #region Transformations and Filtrs
 
         private byte[] originalArray, displayingArray;
@@ -1225,7 +1226,7 @@ namespace ComputerGraphic
                 {
                     stream.Write(originalArray, 0, originalArray.Length);
                 }
-                selectedImage.Source = wbitmapNew;
+                selectedImage.Source = wbitmapNew;               
 
             }
         }
@@ -1660,6 +1661,8 @@ namespace ComputerGraphic
             }
         }
 
+        
+
         private void B_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
@@ -1782,6 +1785,197 @@ namespace ComputerGraphic
             BTextBox2.Text = "0";
             BrightnessTextBox.Text = "0";
             MultiplyTextBox.Text = "1";
+        }
+
+        #endregion
+
+
+
+        #region histogram i binaryzacja
+        private double[] LUTr, LUTg, LUTb, LUTgray;
+
+
+        private void HistogramStretch_Click(object sender, RoutedEventArgs e)
+        {
+            byte rMax, gMax, bMax, rMin, gMin, bMin, rValue, gValue, bValue;
+            rMax = gMax = bMax = rMin = gMin = bMin = 0;
+
+            if(!grayScale)
+            {
+                for (int i = 0; i < displayingArray.Length; i += 4)
+                {
+                    bValue = displayingArray[i];
+                    gValue = displayingArray[i + 1];
+                    rValue = displayingArray[i + 2];
+
+                    if (gValue > gMax) { gMax = gValue; } else if (gValue < gMin) { gMin = gValue; }
+                    if (bValue > bMax) { bMax = bValue; } else if (bValue < bMin) { bMin = bValue; }
+                    if (rValue > rMax) { rMax = rValue; } else if (rValue < rMin) { rMin = rValue; }
+                }
+
+                LUTr = new double[256];
+                LUTg = new double[256];
+                LUTb = new double[256];
+                double bDouble = 255.0 / (bMax - bMin);
+                double gDouble = 255.0 / (gMax - gMin);
+                double rDouble = 255.0 / (rMax - rMin);
+                double b, g, r;
+                for (int i = 0; i < 256; i++)
+                {
+                    b = bDouble * (i - bMin);
+                    g = gDouble * (i - rMin);
+                    r = rDouble * (i - gMin);
+
+                    LUTb[i] = (b > 255 ? 255 : (b < 0 ? 0 : b));
+                    LUTg[i] = (g > 255 ? 255 : (g < 0 ? 0 : g));
+                    LUTr[i] = (r > 255 ? 255 : (r < 0 ? 0 : r));
+                }
+
+                for (int i = 0; i < displayingArray.Length; i += 4)
+                {
+                    bValue = displayingArray[i];
+                    gValue = displayingArray[i + 1];
+                    rValue = displayingArray[i + 2];
+
+                    displayingArray[i] = (byte)LUTb[bValue];
+                    displayingArray[i + 1] = (byte)LUTg[gValue];
+                    displayingArray[i + 2] = (byte)LUTr[rValue];
+                }
+            }
+            else
+            {
+                for (int i = 0; i < displayingArray.Length; i += 4)
+                {
+                    bValue = displayingArray[i];
+                    if (bValue > bMax) { bMax = bValue; } else if (bValue < bMin) { bMin = bValue; }
+                }
+
+                LUTgray = new double[256];
+                double bDouble = 255.0 / (bMax - bMin);
+                double b;
+                for (int i = 0; i < 256; i++)
+                {
+                    b = bDouble * (i - bMin);
+
+                    LUTgray[i] = (b > 255 ? 255 : (b < 0 ? 0 : b));
+                }
+
+                for (int i = 0; i < displayingArray.Length; i += 4)
+                {
+                    bValue = displayingArray[i];
+                    bValue = (byte)LUTgray[bValue];
+
+                    displayingArray[i] = bValue;
+                    displayingArray[i + 1] = bValue;
+                    displayingArray[i + 2] = bValue;
+                }
+            }
+
+            WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+            using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+            {
+                stream.Write(displayingArray, 0, displayingArray.Length);
+            }
+
+            selectedImage.Source = wbitmapNew;
+            ResetSliders();
+        }
+
+        private void HistogramNormalize_Click(object sender, RoutedEventArgs e)
+        {
+            double[] Dr = new double[256];
+            double[] Dg = new double[256];
+            double[] Db = new double[256];
+            double DrZero = 0, DgZero = 0, DbZero = 0;
+            double sumHr = 0, sumHg = 0, sumHb = 0, s = bitmapHeight * bitmapWidth;
+            int[] Hr = new int[256];
+            int[] Hg = new int[256];
+            int[] Hb = new int[256];
+            byte rValue, gValue, bValue;
+
+            for(int i = 0; i<256; i++)
+            {
+                Hr[i] = Hg[i] = Hb[i] = 0;
+            }
+
+            for(int i = 0; i < displayingArray.Length; i += 4)
+            {
+                Hb[displayingArray[i]]++;
+                Hg[displayingArray[i + 1]]++;
+                Hr[displayingArray[i + 2]]++;
+            }
+
+            
+            for(int i = 0; i < 256; i++)
+            {
+                sumHr += Hr[i];
+                Dr[i] = sumHr / s;
+
+                sumHg += Hg[i];
+                Dg[i] = sumHg / s;
+
+                sumHb += Hb[i];
+                Db[i] = sumHb / s;
+            }
+
+            #region set DZero
+            for (int i = 0; i < 256; i++)
+            {
+                if(Dr[i] > 0)
+                {
+                    DrZero = Dr[i];
+                    break;
+                }
+            }
+
+            for (int i = 0; i < 256; i++)
+            {
+                if (Dg[i] > 0)
+                {
+                    DgZero = Dg[i];
+                    break;
+                }
+            }
+
+            for (int i = 0; i < 256; i++)
+            {
+                if (Db[i] > 0)
+                {
+                    DbZero = Db[i];
+                    break;
+                }
+            }
+            #endregion
+
+            LUTr = new double[256];
+            LUTg = new double[256];
+            LUTb = new double[256];
+            for(int i = 0; i < 256; i++)
+            {
+                LUTr[i] = (Dr[i] - DrZero) / (1 - DrZero) * 255;
+                LUTg[i] = (Dg[i] - DgZero) / (1 - DgZero) * 255;
+                LUTb[i] = (Db[i] - DbZero) / (1 - DbZero) * 255;
+            }
+
+            for (int i = 0; i < displayingArray.Length; i += 4)
+            {
+                bValue = displayingArray[i];
+                gValue = displayingArray[i + 1];
+                rValue = displayingArray[i + 2];
+
+                displayingArray[i] = (byte)LUTb[bValue];
+                displayingArray[i + 1] = (byte)LUTg[gValue];
+                displayingArray[i + 2] = (byte)LUTr[rValue];
+            }
+
+            WriteableBitmap wbitmapNew = new WriteableBitmap(bitmapWidth, bitmapHeight);
+            using (Stream stream = wbitmapNew.PixelBuffer.AsStream())
+            {
+                stream.Write(displayingArray, 0, displayingArray.Length);
+            }
+
+            selectedImage.Source = wbitmapNew;
+            ResetSliders();
         }
 
         #endregion
